@@ -4,6 +4,7 @@ import WorkplaceMap from './pages/WorkplaceMap'
 import Scenario from './pages/Scenario'
 import Reflection from './pages/Reflection'
 import Library from './pages/Library'
+import Help from './pages/Help'
 import { ThemeProvider } from './context/ThemeContext'
 import ThemeSelector from './components/ThemeSelector'
 
@@ -27,6 +28,7 @@ export default function App() {
         {page === 'scenario'   && <Scenario scenario={activeScenario} navigate={navigate} />}
         {page === 'reflection' && <Reflection data={reflectionData} navigate={navigate} />}
         {page === 'library'    && <Library navigate={navigate} />}
+        {page === 'help'       && <Help navigate={navigate} />}
       </div>
       <ThemeSelector />
     </ThemeProvider>

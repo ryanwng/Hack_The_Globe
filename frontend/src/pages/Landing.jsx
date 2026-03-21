@@ -9,6 +9,8 @@ export default function Landing({ navigate }) {
       <header className={styles.header}>
         <span className={styles.logoType}>SocialScript</span>
         <nav className={styles.nav}>
+          <button className={styles.navLink} onClick={() => navigate('help')}>About</button>
+          <span className={styles.navDivider}>·</span>
           <button className={styles.navLink} onClick={() => navigate('library')}>Library</button>
           <span className={styles.navDivider}>·</span>
           <button className={styles.navLink} onClick={() => navigate('map')}>Practice</button>
@@ -53,7 +55,6 @@ function TypewriterHeadline() {
   const text = 'Practice the conversations that matter.'
 
   const [displayed, setDisplayed] = useState('')
-  const indexRef = useRef(0)
 
   useEffect(() => {
   let i = 0
@@ -131,25 +132,3 @@ function TapeButton({ label, width, onClick, cls }) {
   )
 }
 
-function TypewriterDeco() {
-  return (
-    <svg viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', maxWidth: 220, opacity: 0.18 }}>
-      <rect x="30" y="60" width="160" height="110" rx="8" stroke="var(--ink)" strokeWidth="3" fill="none" />
-      <rect x="45" y="75" width="130" height="55" rx="4" stroke="var(--ink)" strokeWidth="2" fill="none" />
-      {[0,1,2,3,4,5,6,7,8].map(i => (
-        <rect key={i} x={50 + i * 13} y={138} width="10" height="10" rx="2" stroke="var(--ink)" strokeWidth="1.5" fill="none" />
-      ))}
-      {[0,1,2,3,4,5,6,7].map(i => (
-        <rect key={i} x={56 + i * 13} y={152} width="10" height="10" rx="2" stroke="var(--ink)" strokeWidth="1.5" fill="none" />
-      ))}
-      <rect x="70" y="166" width="80" height="10" rx="2" stroke="var(--ink)" strokeWidth="1.5" fill="none" />
-      <rect x="60" y="20" width="100" height="50" rx="2" stroke="var(--ink)" strokeWidth="2" fill="none" />
-      <line x1="72" y1="32" x2="148" y2="32" stroke="var(--ink)" strokeWidth="1" />
-      <line x1="72" y1="40" x2="148" y2="40" stroke="var(--ink)" strokeWidth="1" />
-      <line x1="72" y1="48" x2="120" y2="48" stroke="var(--ink)" strokeWidth="1" />
-      <rect x="20" y="55" width="180" height="10" rx="3" stroke="var(--ink)" strokeWidth="2" fill="none" />
-      <circle cx="22" cy="60" r="5" stroke="var(--ink)" strokeWidth="2" fill="none" />
-      <circle cx="198" cy="60" r="5" stroke="var(--ink)" strokeWidth="2" fill="none" />
-    </svg>
-  )
-}
