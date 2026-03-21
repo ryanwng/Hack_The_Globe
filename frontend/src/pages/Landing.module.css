@@ -65,24 +65,23 @@
 /* ── Hero ── */
 
 .hero {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+  padding: 5rem 0 4rem;
 }
 
 .heroInner {
-  max-width: 600px;
+  max-width: 560px;
   margin: 0 auto;
   text-align: center;
 }
 
 .headline {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
   line-height: 1.12;
   letter-spacing: 0.01em;
   color: var(--ink);
   margin-bottom: 1.2rem;
+  min-height: 3em;
 }
 
 .subline {
@@ -95,19 +94,16 @@
 }
 
 .ctaRow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  margin-top: 1.5rem;
+  position: relative;
+  height: 200px;
+  margin-top: 2rem;
 }
 
 /* ── Tape buttons ── */
 
 .ctaPrimary,
 .ctaSecondary {
-  position: static;
+  position: absolute;
   background: none;
   border: none;
   padding: 0;
@@ -124,14 +120,6 @@
   display: block;
   filter: var(--tape-filter);
   pointer-events: none;
-}
-
-.ctaPrimary img  {
-  width: 380px;
-}
-
-.ctaSecondary img {
-  width: 270px;
 }
 
 .ctaPrimary span,
@@ -155,17 +143,20 @@
   font-size: 0.9rem;
 }
 
-/* Placement — secondary (Browse) top-left, primary (Workplace) bottom-right anchor */
 .ctaSecondary {
   --rot: -6deg;
   transform: rotate(var(--rot));
-  margin-bottom: -40px;   /* pulls it DOWN */
+  top: -20px;
+  left: 50%;
+  margin-left: -200px;
 }
 
 .ctaPrimary {
   --rot: 4deg;
   transform: rotate(var(--rot));
-  margin-top: -40px;      /* pulls it UP */
+  bottom: 20px;
+  left: 50%;
+  margin-left: -80px;
 }
 
 .tapeHover {
