@@ -1,10 +1,36 @@
+import { useEffect, useState } from 'react'
 import styles from './Reflection.module.css'
 import PageShell from '../components/PageShell'
+import { completeSession } from '../api/client'
 
 export default function Reflection({ data, navigate }) {
   const scenario = data?.scenario
   const goal = data?.goal
   const history = data?.history || []
+  const [feedback, setFeedback] = useState(data?.feedback || null)
+  const [isLoadingFeedback, setIsLoadingFeedback] = useState(false)
+  const [feedbackError, setFeedbackError] = useState('')
+
+  useEffect(() => {
+    let active = true
+    async function loadFeedback() {
+      if (feedback || !data?.sessionId) return
+      setIsLoadingFeedback(true)
+      setFeedbackError('')
+      try {
+        const payload = await completeSession(data.sessionId)
+        if (active) setFeedback(payload)
+      } catch (err) {
+        if (active) setFeedbackError(err.message || 'Unable to load feedback.')
+      } finally {
+        if (active) setIsLoadingFeedback(false)
+      }
+    }
+    loadFeedback()
+    return () => {
+      active = false
+    }
+  }, [data?.sessionId, feedback])
 
   return (
     <PageShell navigate={navigate}>
@@ -36,6 +62,25 @@ export default function Reflection({ data, navigate }) {
             </div>
           ))}
         </div>
+
+        <div className={styles.divider} />
+
+        {(isLoadingFeedback || feedback || feedbackError) && (
+          <div className={styles.block}>
+            <span className={styles.blockLabel}>AI feedback</span>
+            {isLoadingFeedback && <p className={styles.blockText}>Generating feedback...</p>}
+            {feedbackError && <p className={styles.blockText}>{feedbackError}</p>}
+            {feedback && (
+              <>
+                <p className={styles.blockText}><strong>Overall score:</strong> {feedback.overallScore}</p>
+                <p className={styles.blockText}><strong>Strengths:</strong> {feedback.strengths.join(', ') || 'N/A'}</p>
+                <p className={styles.blockText}><strong>Improvements:</strong> {feedback.improvements.join(', ') || 'N/A'}</p>
+                <p className={styles.blockText}><strong>Better phrases:</strong> {feedback.exampleBetterPhrases.join(', ') || 'N/A'}</p>
+                <p className={styles.blockText}><strong>Next focus:</strong> {feedback.nextPracticeFocus}</p>
+              </>
+            )}
+          </div>
+        )}
 
         <div className={styles.divider} />
 

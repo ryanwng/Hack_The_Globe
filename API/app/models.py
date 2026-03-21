@@ -25,6 +25,7 @@ class SessionCreateRequest(BaseModel):
 class SessionCreateResponse(BaseModel):
     sessionId: str
     aiOpeningMessage: str
+    responseOptions: List[str] = []
     conversationState: str
 
 
@@ -42,6 +43,7 @@ class HintPayload(BaseModel):
 
 class TurnResponse(BaseModel):
     aiMessage: str
+    responseOptions: List[str] = []
     hint: Optional[HintPayload] = None
     turnNumber: int
     progressSignals: List[str]
@@ -71,6 +73,7 @@ class SimulateConversationRequest(BaseModel):
 class SimulatedTurn(BaseModel):
     userMessage: str
     aiMessage: str
+    responseOptions: List[str] = []
     hint: Optional[HintPayload] = None
     turnNumber: int
 

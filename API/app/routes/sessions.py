@@ -1,3 +1,4 @@
+import re
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
@@ -34,6 +35,29 @@ def get_gemini() -> GeminiClient:
     if gemini_client is None:
         gemini_client = GeminiClient()
     return gemini_client
+
+
+def _split_message_and_options(raw: str) -> tuple[str, list[str]]:
+    """Split an AI response into the in-character message and the numbered options."""
+    parts = re.split(r'\nOPTIONS:\s*\n', raw, maxsplit=1)
+    message = parts[0].strip()
+    options = []
+    if len(parts) > 1:
+        for line in parts[1].strip().splitlines():
+            cleaned = re.sub(r'^\d+[\.\)]\s*', '', line.strip())
+            if cleaned:
+                options.append(cleaned)
+    # Guarantee at least 3 options even if parsing fails
+    if len(options) < 3:
+        options = options or []
+        defaults = [
+            "Respond confidently and directly.",
+            "Take a cautious, polite approach.",
+            "Ask a clarifying question first.",
+        ]
+        while len(options) < 3:
+            options.append(defaults[len(options)])
+    return message, options[:3]
 
 
 def _parse_hint(raw_hint: str) -> HintPayload:
@@ -98,11 +122,13 @@ def create_session(payload: SessionCreateRequest) -> SessionCreateResponse:
         user_goal=payload.userGoal,
         difficulty=payload.difficulty or "medium",
     )
-    opening = get_gemini().generate_text(build_opening_prompt(state))
-    state.messages.append({"role": "assistant", "content": opening})
+    raw_opening = get_gemini().generate_text(build_opening_prompt(state))
+    message, options = _split_message_and_options(raw_opening)
+    state.messages.append({"role": "assistant", "content": message})
     return SessionCreateResponse(
         sessionId=state.session_id,
-        aiOpeningMessage=opening,
+        aiOpeningMessage=message,
+        responseOptions=options,
         conversationState="active",
     )
 
@@ -114,7 +140,8 @@ def create_turn(session_id: str, payload: TurnRequest) -> TurnResponse:
         raise HTTPException(status_code=404, detail="Session not found")
 
     state.messages.append({"role": "user", "content": payload.userMessage})
-    ai_message = get_gemini().generate_text(build_turn_prompt(state, payload.userMessage))
+    raw_response = get_gemini().generate_text(build_turn_prompt(state, payload.userMessage))
+    ai_message, options = _split_message_and_options(raw_response)
     state.messages.append({"role": "assistant", "content": ai_message})
 
     hint = None
@@ -124,6 +151,7 @@ def create_turn(session_id: str, payload: TurnRequest) -> TurnResponse:
 
     return TurnResponse(
         aiMessage=ai_message,
+        responseOptions=options,
         hint=hint,
         turnNumber=len([m for m in state.messages if m["role"] == "user"]),
         progressSignals=[
@@ -162,13 +190,15 @@ def simulate_conversation(payload: SimulateConversationRequest) -> SimulateConve
         user_goal=payload.userGoal,
         difficulty=payload.difficulty or "medium",
     )
-    opening = get_gemini().generate_text(build_opening_prompt(state))
-    state.messages.append({"role": "assistant", "content": opening})
+    raw_opening = get_gemini().generate_text(build_opening_prompt(state))
+    message, _ = _split_message_and_options(raw_opening)
+    state.messages.append({"role": "assistant", "content": message})
 
     simulated_turns = []
     for user_message in payload.userMessages:
         state.messages.append({"role": "user", "content": user_message})
-        ai_message = get_gemini().generate_text(build_turn_prompt(state, user_message))
+        raw = get_gemini().generate_text(build_turn_prompt(state, user_message))
+        ai_message, turn_options = _split_message_and_options(raw)
         state.messages.append({"role": "assistant", "content": ai_message})
         hint = None
         if payload.requestHintEachTurn:
@@ -178,6 +208,7 @@ def simulate_conversation(payload: SimulateConversationRequest) -> SimulateConve
             SimulatedTurn(
                 userMessage=user_message,
                 aiMessage=ai_message,
+                responseOptions=turn_options,
                 hint=hint,
                 turnNumber=len([m for m in state.messages if m["role"] == "user"]),
             )
@@ -186,7 +217,7 @@ def simulate_conversation(payload: SimulateConversationRequest) -> SimulateConve
     feedback = _parse_feedback(get_gemini().generate_text(build_feedback_prompt(state)))
     return SimulateConversationResponse(
         sessionId=state.session_id,
-        aiOpeningMessage=opening,
+        aiOpeningMessage=message,
         turns=simulated_turns,
         feedback=feedback,
     )

@@ -22,8 +22,8 @@ const ROOMS = [
     x: 42, y: 42, w: 280, h: 196,
     doorX: 182, doorY: 230, doorW: 42, doorH: 10,
     scenarios: [
-      { id: 'ask-help', title: 'Asking your manager for help', difficulty: 'gentle', duration: '5–8 min', tag: 'Low pressure' },
-      { id: 'deadline-extend', title: 'Requesting a deadline extension', difficulty: 'moderate', duration: '8–12 min', tag: 'Conflict-adjacent' },
+      { id: 'ask-help', title: 'Asking your manager for help', difficulty: 'gentle', duration: '5–8 min', tag: 'Low pressure', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
+      { id: 'deadline-extend', title: 'Requesting a deadline extension', difficulty: 'moderate', duration: '8–12 min', tag: 'Conflict-adjacent', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
     ],
   },
   {
@@ -33,8 +33,8 @@ const ROOMS = [
     x: 638, y: 42, w: 280, h: 196,
     doorX: 750, doorY: 230, doorW: 42, doorH: 10,
     scenarios: [
-      { id: 'first-interview', title: 'First job interview', difficulty: 'moderate', duration: '10–15 min', tag: 'High stakes' },
-      { id: 'follow-up', title: 'Following up after an interview', difficulty: 'gentle', duration: '5–8 min', tag: 'Low pressure' },
+      { id: 'first-interview', title: 'First job interview', difficulty: 'moderate', duration: '10–15 min', tag: 'High stakes', apiScenarioId: 'job_interview', apiScenarioTitle: 'Job Interview' },
+      { id: 'follow-up', title: 'Following up after an interview', difficulty: 'gentle', duration: '5–8 min', tag: 'Low pressure', apiScenarioId: 'job_interview', apiScenarioTitle: 'Job Interview' },
     ],
   },
   {
@@ -44,8 +44,8 @@ const ROOMS = [
     x: 42, y: 336, w: 280, h: 260,
     doorX: 182, doorY: 336, doorW: 42, doorH: 10,
     scenarios: [
-      { id: 'small-talk', title: 'Small talk at the coffee machine', difficulty: 'gentle', duration: '4–6 min', tag: 'Social' },
-      { id: 'lunch', title: 'Joining colleagues for lunch', difficulty: 'gentle', duration: '6–10 min', tag: 'Social' },
+      { id: 'small-talk', title: 'Small talk at the coffee machine', difficulty: 'gentle', duration: '4–6 min', tag: 'Social', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
+      { id: 'lunch', title: 'Joining colleagues for lunch', difficulty: 'gentle', duration: '6–10 min', tag: 'Social', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
     ],
   },
   {
@@ -55,8 +55,8 @@ const ROOMS = [
     x: 638, y: 336, w: 280, h: 260,
     doorX: 778, doorY: 336, doorW: 42, doorH: 10,
     scenarios: [
-      { id: 'team-meeting', title: 'Speaking up in a team meeting', difficulty: 'moderate', duration: '10–15 min', tag: 'Group setting' },
-      { id: 'disagreement', title: 'Disagreeing respectfully', difficulty: 'challenging', duration: '12–18 min', tag: 'Conflict' },
+      { id: 'team-meeting', title: 'Speaking up in a team meeting', difficulty: 'moderate', duration: '10–15 min', tag: 'Group setting', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
+      { id: 'disagreement', title: 'Disagreeing respectfully', difficulty: 'challenging', duration: '12–18 min', tag: 'Conflict', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
     ],
   },
 ]
@@ -317,8 +317,8 @@ export default function WorkplaceMap({ navigate }) {
     cy > HALLWAY_ZONE.y && cy < HALLWAY_ZONE.y + HALLWAY_ZONE.h
 
   const hallwayScenarios = [
-    { id: 'pass-boss', title: 'Passing your boss in the corridor', difficulty: 'gentle', duration: '3–5 min', tag: 'Quick' },
-    { id: 'forgotten-name', title: 'Forgetting a colleague\'s name', difficulty: 'moderate', duration: '5–8 min', tag: 'Awkward moments' },
+    { id: 'pass-boss', title: 'Passing your boss in the corridor', difficulty: 'gentle', duration: '3–5 min', tag: 'Quick', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
+    { id: 'forgotten-name', title: 'Forgetting a colleague\'s name', difficulty: 'moderate', duration: '5–8 min', tag: 'Awkward moments', apiScenarioId: 'team_conflict', apiScenarioTitle: 'Team Conflict' },
   ]
 
   const panelRoom = activeRoom || (inHallway ? { id: 'hallway', label: 'Hallway', icon: '—', scenarios: hallwayScenarios } : null)
