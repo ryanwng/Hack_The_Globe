@@ -17,6 +17,7 @@ export function ThemeProvider({ children }) {
   const [reduceMotion, setReduceMotion] = useState(saved.reduceMotion ?? false)
   const [fontSpacing, setFontSpacing] = useState(saved.fontSpacing ?? false)
   const [monochrome, setMonochrome] = useState(saved.monochrome ?? false)
+  const [dyslexicFont, setDyslexicFont] = useState(saved.dyslexicFont ?? false)
 
   useEffect(() => {
     const html = document.documentElement
@@ -24,13 +25,14 @@ export function ThemeProvider({ children }) {
     html.classList.toggle('reduce-motion', reduceMotion)
     html.classList.toggle('font-spacing', fontSpacing)
     html.classList.toggle('monochrome', monochrome)
+    html.classList.toggle('dyslexic-font', dyslexicFont)
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ theme, reduceMotion, fontSpacing, monochrome }))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ theme, reduceMotion, fontSpacing, monochrome, dyslexicFont }))
     } catch {}
-  }, [theme, reduceMotion, fontSpacing, monochrome])
+  }, [theme, reduceMotion, fontSpacing, monochrome, dyslexicFont])
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, reduceMotion, setReduceMotion, fontSpacing, setFontSpacing, monochrome, setMonochrome }}>
+    <ThemeContext.Provider value={{ theme, setTheme, reduceMotion, setReduceMotion, fontSpacing, setFontSpacing, monochrome, setMonochrome, dyslexicFont, setDyslexicFont }}>
       {children}
     </ThemeContext.Provider>
   )

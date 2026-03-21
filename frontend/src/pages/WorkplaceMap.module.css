@@ -33,11 +33,15 @@
 .viewport {
   overflow: hidden;
   border: 1px solid var(--line);
-  background: var(--paper-dark);
+  background-color: var(--paper-dark);
   background-image:
     linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 42px 42px;
+    linear-gradient(90deg, var(--line) 1px, transparent 1px),
+    url('/paper.jpg');
+  background-size: 42px 42px, 42px 42px, 720px;
+  background-position: 0 0, 0 0, center;
+  background-repeat: repeat, repeat, no-repeat;
+  background-blend-mode: normal, normal, soft-light;
   cursor: default;
   outline: none;
   position: relative;

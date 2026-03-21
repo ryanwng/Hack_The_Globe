@@ -17,6 +17,7 @@
   --font-mono: 'Courier Prime', 'Courier New', monospace;
   --font-display: 'Special Elite', 'Courier New', monospace;
   --font-serif: 'IM Fell English', Georgia, serif;
+  --tape-filter: brightness(1.18) saturate(0.65) hue-rotate(8deg);
 }
 
 /* ─── Soft Light: cream / sepia ─── */
@@ -30,6 +31,7 @@
   --accent: #7a5c3e;
   --accent-warm: #8a4a2e;
   --line: rgba(61, 52, 40, 0.1);
+  --tape-filter: brightness(1.28) saturate(0.55) hue-rotate(8deg);
 }
 
 /* ─── Midnight: deep charcoal / navy ─── */
@@ -43,6 +45,7 @@
   --accent: #7a9cbf;
   --accent-warm: #bf9a7a;
   --line: rgba(208, 208, 224, 0.1);
+  --tape-filter: brightness(0.72) saturate(0.5) hue-rotate(180deg);
 }
 
 /* ─── Low-Stim: muted sage / earth ─── */
@@ -56,6 +59,7 @@
   --accent: #3a6e5e;
   --accent-warm: #7a6e3a;
   --line: rgba(45, 74, 62, 0.12);
+  --tape-filter: brightness(1.15) saturate(0.5) hue-rotate(28deg);
 }
 
 /* ─── Dyslexia-Friendly: warm peach + readable font ─── */
@@ -69,9 +73,7 @@
   --accent: #5c4a2e;
   --accent-warm: #7a3e2e;
   --line: rgba(45, 35, 24, 0.12);
-  --font-mono: 'Atkinson Hyperlegible', 'Courier Prime', monospace;
-  --font-display: 'Atkinson Hyperlegible', 'Special Elite', monospace;
-  --font-serif: 'Atkinson Hyperlegible', Georgia, serif;
+  --tape-filter: brightness(1.12) saturate(0.6) hue-rotate(4deg);
 }
 
 /* ─── Low Contrast: intentionally reduced contrast ratio ─── */
@@ -85,6 +87,7 @@
   --accent: #7a7868;
   --accent-warm: #8a7a68;
   --line: rgba(106, 101, 88, 0.08);
+  --tape-filter: brightness(1.1) saturate(0.35) hue-rotate(8deg);
 }
 
 /* ─── Functional Toggles ─── */
@@ -111,6 +114,12 @@ html.monochrome {
   filter: grayscale(100%);
 }
 
+html.dyslexic-font {
+  --font-mono: 'Atkinson Hyperlegible', 'Courier Prime', monospace;
+  --font-display: 'Atkinson Hyperlegible', 'Special Elite', monospace;
+  --font-serif: 'Atkinson Hyperlegible', Georgia, serif;
+}
+
 html {
   font-size: 16px;
   scroll-behavior: smooth;
@@ -122,9 +131,19 @@ body {
   font-family: var(--font-mono);
   line-height: 1.7;
   min-height: 100vh;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  background-repeat: repeat;
+  isolation: isolate;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('/paper.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: -1;
 }
 
 #root {

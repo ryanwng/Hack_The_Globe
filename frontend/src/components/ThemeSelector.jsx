@@ -18,6 +18,7 @@ export default function ThemeSelector() {
     reduceMotion, setReduceMotion,
     fontSpacing, setFontSpacing,
     monochrome, setMonochrome,
+    dyslexicFont, setDyslexicFont,
   } = useTheme()
 
   const current = THEMES.find(t => t.id === theme) || THEMES[0]
@@ -70,6 +71,13 @@ export default function ThemeSelector() {
                   <span className={styles.toggleThumb} />
                 </span>
                 <span className={styles.toggleLabel}>Monochrome</span>
+              </label>
+              <label className={styles.toggle}>
+                <span className={styles.toggleTrack}>
+                  <input type="checkbox" checked={dyslexicFont} onChange={e => setDyslexicFont(e.target.checked)} />
+                  <span className={styles.toggleThumb} />
+                </span>
+                <span className={styles.toggleLabel}>Readable Font</span>
               </label>
             </div>
           </div>
