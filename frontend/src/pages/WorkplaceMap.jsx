@@ -20,7 +20,7 @@ const ROOMS = [
     label: 'Your Desk',
     icon: '⬜',
     x: 42, y: 42, w: 280, h: 196,
-    doorX: 182, doorY: 196, doorW: 42, doorH: 10,
+    doorX: 182, doorY: 230, doorW: 42, doorH: 10,
     scenarios: [
       { id: 'ask-help', title: 'Asking your manager for help', difficulty: 'gentle', duration: '5–8 min', tag: 'Low pressure' },
       { id: 'deadline-extend', title: 'Requesting a deadline extension', difficulty: 'moderate', duration: '8–12 min', tag: 'Conflict-adjacent' },
@@ -31,7 +31,7 @@ const ROOMS = [
     label: 'Interview Room',
     icon: '▣',
     x: 638, y: 42, w: 280, h: 196,
-    doorX: 750, doorY: 238, doorW: 60, doorH: 10,
+    doorX: 750, doorY: 230, doorW: 42, doorH: 10,
     scenarios: [
       { id: 'first-interview', title: 'First job interview', difficulty: 'moderate', duration: '10–15 min', tag: 'High stakes' },
       { id: 'follow-up', title: 'Following up after an interview', difficulty: 'gentle', duration: '5–8 min', tag: 'Low pressure' },
