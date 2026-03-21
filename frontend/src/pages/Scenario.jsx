@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import styles from './Scenario.module.css'
 import PageShell from '../components/PageShell'
-import { completeSession, createSession, createTurn, getHint } from '../api/client'
+import { completeSession, createSession, createTurn, getHint, getTTS } from '../api/client'
 import { mapFrontendScenarioToApi } from '../lib/scenarioApiMapping'
 
-
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const hasSpeechRecognition = !!SpeechRecognition;
 
 export default function Scenario({ scenario, navigate }) {
   const [phase, setPhase] = useState('goal') // goal | chat | paused
@@ -22,6 +23,110 @@ export default function Scenario({ scenario, navigate }) {
   const [showFreeText, setShowFreeText] = useState(false)
   const [customGoal, setCustomGoal] = useState('')
   const [contextInput, setContextInput] = useState('')
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true)
+  const [isListening, setIsListening] = useState(false)
+  const [recognition, setRecognition] = useState(null)
+
+  useEffect(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices()
+    }
+    return () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = false; 
+      rec.interimResults = true;
+      rec.onresult = (event) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          finalTranscript += event.results[i][0].transcript;
+        }
+        setDraftMessage(finalTranscript);
+      };
+      rec.onerror = (e) => {
+        console.error('Speech recognition error', e);
+        setIsListening(false);
+      };
+      rec.onend = () => {
+        setIsListening(false);
+      };
+      setRecognition(rec);
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!hasSpeechRecognition) {
+      alert("Your browser does not natively support Speech Recognition. Please try using Chrome or Safari on desktop.");
+      return;
+    }
+    if (!recognition) return;
+    if (isListening) {
+      recognition.stop();
+    } else {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setDraftMessage('');
+      try {
+        recognition.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const speakText = async (text) => {
+    if (!isVoiceEnabled) return
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel()
+    if (window.currentAudio) window.currentAudio.pause()
+    
+    // Remove markdown asterisks/formatting before speaking
+    const cleanText = text.replace(/[*_~`]/g, '')
+    
+    // 1. Try backend TTS (ElevenLabs)
+    try {
+      const response = await getTTS(cleanText)
+      if (response && response.audioBuffer) {
+        const audio = new Audio("data:audio/mp3;base64," + response.audioBuffer)
+        window.currentAudio = audio
+        audio.play()
+        return // Successfully played premium voice
+      }
+    } catch (e) {
+      console.warn("Backend TTS failed, falling back to browser native TTS", e)
+    }
+
+    // 2. Fallback to Browser Native TTS
+    if (!('speechSynthesis' in window)) return
+    const utterance = new SpeechSynthesisUtterance(cleanText)
+    
+    const voices = window.speechSynthesis.getVoices()
+    const naturalVoice = voices.find(v => 
+      v.name.includes('Samantha') || 
+      v.name.includes('Google US English') || 
+      v.name.includes('Premium') || 
+      v.name.includes('Daniel')
+    ) || voices.find(v => v.lang.startsWith('en'))
+    
+    if (naturalVoice) {
+      utterance.voice = naturalVoice
+    }
+    
+    // Tune for natural conversational tone
+    utterance.rate = 0.95
+    utterance.pitch = 1.05
+    
+    window.speechSynthesis.speak(utterance)
+  }
 
   const activeScenario = useMemo(() => scenario || {}, [scenario])
   const scenarioLabel = useMemo(() => activeScenario.title || 'Scenario', [activeScenario.title])
@@ -48,6 +153,7 @@ export default function Scenario({ scenario, navigate }) {
       setResponseOptions(payload.responseOptions || [])
       setShowFreeText(false)
       setPhase('chat')
+      speakText(payload.aiOpeningMessage)
     } catch (err) {
       setError(err.message || 'Unable to start session.')
     } finally {
@@ -73,6 +179,7 @@ export default function Scenario({ scenario, navigate }) {
       setResponseOptions(turn.responseOptions || [])
       setLatestHint(turn.hint || null)
       setHistory((prev) => [...prev, { userMessage: text, aiMessage: turn.aiMessage, hint: turn.hint || null }])
+      speakText(turn.aiMessage)
     } catch (err) {
       setError(err.message || 'Unable to send message.')
     } finally {
@@ -98,6 +205,9 @@ export default function Scenario({ scenario, navigate }) {
     if (!sessionId) return
     setError('')
     setIsFinishing(true)
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
     try {
       const feedback = await completeSession(sessionId)
       navigate('reflection', {
@@ -120,9 +230,23 @@ export default function Scenario({ scenario, navigate }) {
         <div className={styles.scenarioHeader}>
           <span className={styles.breadcrumb}>Workplace {'→'} {scenarioLabel}</span>
           {phase === 'chat' && (
-            <button className={styles.pauseBtn} onClick={() => setPhase(p => p === 'paused' ? 'chat' : 'paused')}>
-              {phase === 'paused' ? '▶ Resume' : '⏸ Pause'}
-            </button>
+            <div className={styles.headerControls}>
+              <button 
+                className={styles.voiceBtn} 
+                onClick={() => {
+                  setIsVoiceEnabled(!isVoiceEnabled)
+                  if (isVoiceEnabled && 'speechSynthesis' in window) {
+                    window.speechSynthesis.cancel()
+                  }
+                }}
+                title={isVoiceEnabled ? "Mute AI Voice" : "Enable AI Voice"}
+              >
+                {isVoiceEnabled ? '🔊' : '🔇'}
+              </button>
+              <button className={styles.pauseBtn} onClick={() => setPhase(p => p === 'paused' ? 'chat' : 'paused')}>
+                {phase === 'paused' ? '▶ Resume' : '⏸ Pause'}
+              </button>
+            </div>
           )}
         </div>
 
@@ -143,7 +267,7 @@ export default function Scenario({ scenario, navigate }) {
             </div>
             <div className={styles.goalSection}>
               <h2 className={styles.goalHeading}>What is your goal for this conversation?</h2>
-              
+
               <div className={styles.inputGroup}>
                 <label className={styles.inputLabel}>Your specific goal</label>
                 <textarea
@@ -165,7 +289,7 @@ export default function Scenario({ scenario, navigate }) {
                 />
               </div>
 
-              <button 
+              <button
                 className={styles.startBtn}
                 onClick={handleStart}
                 disabled={isLoading || !customGoal.trim()}
@@ -185,7 +309,14 @@ export default function Scenario({ scenario, navigate }) {
 
             {messages.map((message, i) => (
               <div key={`${message.role}-${i}`} className={message.role === 'assistant' ? styles.characterBubble : styles.userBubble}>
-                <span className={styles.speakerName}>{message.role === 'assistant' ? 'Them' : 'You'}</span>
+                <div className={styles.speakerHeader}>
+                  <span className={styles.speakerName}>{message.role === 'assistant' ? 'Them' : 'You'}</span>
+                  {message.role === 'assistant' && isVoiceEnabled && (
+                    <button className={styles.replayBtn} onClick={() => speakText(message.content)} title="Replay audio">
+                      🔊
+                    </button>
+                  )}
+                </div>
                 <p className={styles.bubbleText}>{message.content}</p>
               </div>
             ))}
@@ -208,7 +339,7 @@ export default function Scenario({ scenario, navigate }) {
                   className={`${styles.choiceBtn} ${styles.choiceFree}`}
                   onClick={() => setShowFreeText(true)}
                 >
-                  ✏️ Write your own response
+                  ✏️ Write / Speak your response
                 </button>
               </div>
             )}
@@ -217,19 +348,29 @@ export default function Scenario({ scenario, navigate }) {
             {!isLoading && showFreeText && (
               <div className={styles.choices}>
                 <p className={styles.choicesPrompt}>What do you say?</p>
-                <textarea
-                  className={styles.freeTextarea}
-                  value={draftMessage}
-                  onChange={(e) => setDraftMessage(e.target.value)}
-                  placeholder="Type your response..."
-                  rows={3}
-                  disabled={isLoading}
-                />
+                <div className={styles.freeInputWrapper}>
+                  <textarea
+                    className={styles.freeTextarea}
+                    value={draftMessage}
+                    onChange={(e) => setDraftMessage(e.target.value)}
+                    placeholder="Type your response or click the mic to speak..."
+                    rows={3}
+                    disabled={isLoading}
+                  />
+                    <button
+                      className={`${styles.micBtn} ${isListening ? styles.micActive : ''}`}
+                      onClick={toggleListening}
+                      disabled={isLoading}
+                      title="Dictate response"
+                    >
+                      {isListening ? '🛑' : '🎙️'}
+                    </button>
+                </div>
                 <div className={styles.nextRow}>
                   <button
                     className={styles.revealBtn}
                     onClick={() => sendTurn(draftMessage.trim())}
-                    disabled={isLoading || !draftMessage.trim()}
+                    disabled={isLoading || !draftMessage.trim() || isListening}
                   >
                     Send →
                   </button>
@@ -264,18 +405,16 @@ export default function Scenario({ scenario, navigate }) {
             )}
 
             {latestHint && (
-              <div className={styles.outcomeSection}>
-                <div className={styles.thinkingCard}>
-                  <span className={styles.thinkingLabel}>What they might be thinking</span>
-                  <p className={styles.thinkingText}>{latestHint.whatRecruiterMayThink}</p>
+              <div className={styles.hintCard}>
+                <div className={styles.hintHeader}>
+                  <span className={styles.hintHeaderLabel}>💡 Coach's Perspective</span>
                 </div>
-                <div className={styles.outcomeCard}>
-                  <span className={styles.outcomeLabel}>What to say next</span>
-                  <p className={styles.outcomeText}>{latestHint.whatToSayNext}</p>
-                </div>
-                <div className={styles.outcomeCard}>
-                  <span className={styles.outcomeLabel}>Why it works</span>
-                  <p className={styles.outcomeText}>{latestHint.whyItWorks}</p>
+                <div className={styles.hintBody}>
+                  <p className={styles.hintPerspective}>{latestHint.whatRecruiterMayThink}</p>
+                  <div className={styles.hintActionBox}>
+                    <p className={styles.hintAction}><strong className={styles.hintActionLabel}>Suggested action:</strong> {latestHint.whatToSayNext}</p>
+                  </div>
+                  <p className={styles.hintWhy}>{latestHint.whyItWorks}</p>
                 </div>
               </div>
             )}

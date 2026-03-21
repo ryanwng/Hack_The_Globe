@@ -62,16 +62,22 @@ def _split_message_and_options(raw: str) -> tuple[str, list[str]]:
 
 def _parse_hint(raw_hint: str) -> HintPayload:
     parts = [p.strip() for p in raw_hint.split("||")]
+    
+    def clean(s: str) -> str:
+        # Strip common AI-generated labels/prefixes
+        return re.sub(r'^(whatTheOtherPersonIsThinking|whatToSayNext|whyItWorks|Perspective|Thinking|Action|Reasoning):\s*', '', s, flags=re.IGNORECASE).strip()
+
     if len(parts) < 3:
         return HintPayload(
-            whatRecruiterMayThink=raw_hint,
-            whatToSayNext="Try a shorter, clearer response focused on one key point.",
-            whyItWorks="Clear structure helps the listener follow your intent.",
+            whatRecruiterMayThink=clean(raw_hint),
+            whatToSayNext="Consider clarifying the situation or asking a question to show engagement.",
+            whyItWorks="Curiosity helps build rapport and shows you are listening.",
         )
+    
     return HintPayload(
-        whatRecruiterMayThink=parts[0],
-        whatToSayNext=parts[1],
-        whyItWorks=parts[2],
+        whatRecruiterMayThink=clean(parts[0]),
+        whatToSayNext=clean(parts[1]),
+        whyItWorks=clean(parts[2]),
     )
 
 

@@ -49,4 +49,12 @@ export function completeSession(sessionId) {
   })
 }
 
+export function getTTS(text) {
+  return request('/v1/voice/tts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+}
+
 export { API_BASE_URL }
