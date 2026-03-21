@@ -26,6 +26,9 @@ class SessionCreateRequest(BaseModel):
 class SessionCreateResponse(BaseModel):
     sessionId: str
     aiOpeningMessage: str
+    narration: str = ""
+    characterName: str = ""
+    mood: str = "neutral"
     responseOptions: List[str] = []
     conversationState: str
 
@@ -44,9 +47,12 @@ class HintPayload(BaseModel):
 
 class TurnResponse(BaseModel):
     aiMessage: str
+    narration: str = ""
     responseOptions: List[str] = []
     hint: Optional[HintPayload] = None
     turnNumber: int
+    mood: str = "neutral"
+    socialSignal: str = ""
     progressSignals: List[str]
 
 

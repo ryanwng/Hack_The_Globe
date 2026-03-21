@@ -7,9 +7,11 @@ export default function Reflection({ data, navigate }) {
   const scenario = data?.scenario
   const goal = data?.goal
   const history = data?.history || []
+  const characterName = data?.characterName || ''
   const [feedback, setFeedback] = useState(data?.feedback || null)
   const [isLoadingFeedback, setIsLoadingFeedback] = useState(false)
   const [feedbackError, setFeedbackError] = useState('')
+  const [expandedTurn, setExpandedTurn] = useState(null)
 
   useEffect(() => {
     let active = true
@@ -49,14 +51,32 @@ export default function Reflection({ data, navigate }) {
           <p className={styles.blockText}>{goal || 'Not set'}</p>
         </div>
 
-        {/* What happened */}
+        {/* Annotated replay */}
         <div className={styles.block}>
-          <span className={styles.blockLabel}>What you tried</span>
+          <span className={styles.blockLabel}>Annotated replay</span>
+          <p className={styles.replayNote}>Tap any turn to see the social signal from that moment.</p>
           {history.length === 0 && <p className={styles.historyQ}>Nothing recorded yet.</p>}
           {history.map((h, i) => (
-            <div key={i} className={styles.historyItem}>
-              <p className={styles.historyQ}>{h.aiMessage}</p>
+            <div
+              key={i}
+              className={`${styles.historyItem} ${expandedTurn === i ? styles.historyItemExpanded : ''}`}
+              onClick={() => setExpandedTurn(expandedTurn === i ? null : i)}
+            >
+              <div className={styles.turnHeader}>
+                <span className={styles.turnNumber}>Turn {i + 1}</span>
+                {h.socialSignal && <span className={styles.turnSignalDot}>◉</span>}
+              </div>
+              <p className={styles.historyQ}>
+                {characterName && <span className={styles.speakerTag}>{characterName}</span>}
+                {h.aiMessage}
+              </p>
               <p className={styles.historyA}><em>You:</em> {h.userMessage}</p>
+              {expandedTurn === i && h.socialSignal && (
+                <div className={styles.turnSignal}>
+                  <span className={styles.turnSignalIcon}>◉</span>
+                  <span className={styles.turnSignalText}>{h.socialSignal}</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -137,18 +157,8 @@ export default function Reflection({ data, navigate }) {
             ← Back to the workplace
           </button>
           <button className={styles.libraryBtn} onClick={() => navigate('library')}>
-            Open my library
+            Open my journal
           </button>
-        </div>
-
-        {/* Add to library prompt */}
-        <div className={styles.saveCard}>
-          <span className={styles.saveLabel}>Save to your library?</span>
-          <p className={styles.saveText}>
-            Your library tracks the scenarios you've practiced and the approaches you've explored.
-            No one else can see it.
-          </p>
-          <button className={styles.saveBtn}>Save this scenario</button>
         </div>
       </div>
     </PageShell>

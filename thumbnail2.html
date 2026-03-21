@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 800px;
+    height: 600px;
+    overflow: hidden;
+    background: #edeae2;
+    position: relative;
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(180,172,158,0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,172,158,0.35) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+
+  /* Map zoomed into break room + hallway area */
+  .map {
+    position: absolute;
+    top: -200px;
+    left: -120px;
+    width: 960px;
+    height: 720px;
+    transform: scale(1.1);
+    transform-origin: top left;
+  }
+
+  .room-floor {
+    position: absolute;
+    background: #f5f2eb;
+  }
+
+  .wall {
+    position: absolute;
+    background: #25233a;
+    border-radius: 1px;
+  }
+
+  .door {
+    position: absolute;
+    background: #c8c0b0;
+    border-radius: 1px;
+    opacity: 0.7;
+  }
+
+  .room-label {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .room-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9a8f82;
+    white-space: nowrap;
+  }
+
+  /* Right-side fade */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      transparent 28%,
+      rgba(237,234,226,0.5) 46%,
+      rgba(237,234,226,1) 60%
+    );
+    pointer-events: none;
+    z-index: 30;
+  }
+
+  .vignette-tb {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(237,234,226,0.8) 0%,
+      transparent 10%,
+      transparent 90%,
+      rgba(237,234,226,0.8) 100%
+    );
+    pointer-events: none;
+    z-index: 31;
+  }
+
+  /* Title — big, typewriter font, right side */
+  .title-block {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    text-align: right;
+  }
+
+  .title {
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 80px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: #1c1a2e;
+    line-height: 0.95;
+  }
+</style>
+</head>
+<body>
+
+  <div class="grid-bg"></div>
+
+  <div class="map">
+
+    <!-- Room floors -->
+    <div class="room-floor" style="left:42px;top:42px;width:280px;height:196px;"></div>
+    <div class="room-floor" style="left:638px;top:42px;width:280px;height:196px;"></div>
+    <div class="room-floor" style="left:42px;top:336px;width:280px;height:260px;"></div>
+    <div class="room-floor" style="left:638px;top:336px;width:280px;height:260px;"></div>
+    <div class="room-floor" style="left:378px;top:238px;width:204px;height:184px;opacity:0.6;"></div>
+
+    <!-- Outer walls -->
+    <div class="wall" style="left:0;top:0;width:960px;height:6px;"></div>
+    <div class="wall" style="left:0;top:634px;width:960px;height:6px;"></div>
+    <div class="wall" style="left:0;top:0;width:6px;height:640px;"></div>
+    <div class="wall" style="left:954px;top:0;width:6px;height:640px;"></div>
+
+    <!-- Desk room -->
+    <div class="wall" style="left:42px;top:42px;width:280px;height:6px;"></div>
+    <div class="wall" style="left:42px;top:42px;width:6px;height:196px;"></div>
+    <div class="wall" style="left:316px;top:42px;width:6px;height:196px;"></div>
+    <div class="wall" style="left:42px;top:232px;width:140px;height:6px;"></div>
+    <div class="wall" style="left:224px;top:232px;width:98px;height:6px;"></div>
+    <div class="door" style="left:182px;top:230px;width:42px;height:10px;"></div>
+
+    <!-- Interview room -->
+    <div class="wall" style="left:638px;top:42px;width:280px;height:6px;"></div>
+    <div class="wall" style="left:638px;top:42px;width:6px;height:196px;"></div>
+    <div class="wall" style="left:912px;top:42px;width:6px;height:196px;"></div>
+    <div class="wall" style="left:638px;top:232px;width:112px;height:6px;"></div>
+    <div class="wall" style="left:792px;top:232px;width:126px;height:6px;"></div>
+    <div class="door" style="left:750px;top:230px;width:42px;height:10px;"></div>
+
+    <!-- Break room -->
+    <div class="wall" style="left:42px;top:336px;width:280px;height:6px;"></div>
+    <div class="wall" style="left:42px;top:336px;width:6px;height:260px;"></div>
+    <div class="wall" style="left:316px;top:336px;width:6px;height:260px;"></div>
+    <div class="wall" style="left:42px;top:590px;width:140px;height:6px;"></div>
+    <div class="wall" style="left:224px;top:590px;width:98px;height:6px;"></div>
+    <div class="door" style="left:182px;top:336px;width:42px;height:10px;"></div>
+
+    <!-- Meeting room -->
+    <div class="wall" style="left:638px;top:336px;width:280px;height:6px;"></div>
+    <div class="wall" style="left:638px;top:336px;width:6px;height:260px;"></div>
+    <div class="wall" style="left:912px;top:336px;width:6px;height:260px;"></div>
+    <div class="wall" style="left:638px;top:590px;width:140px;height:6px;"></div>
+    <div class="wall" style="left:820px;top:590px;width:98px;height:6px;"></div>
+    <div class="door" style="left:778px;top:336px;width:42px;height:10px;"></div>
+
+    <!-- Room labels -->
+    <div class="room-label" style="left:182px;top:60px;"><span class="room-name">Your Desk</span></div>
+    <div class="room-label" style="left:778px;top:60px;"><span class="room-name">Interview Room</span></div>
+    <div class="room-label" style="left:182px;top:354px;"><span class="room-name">Break Room</span></div>
+    <div class="room-label" style="left:778px;top:354px;"><span class="room-name">Meeting Room</span></div>
+    <div class="room-label" style="left:480px;top:254px;"><span class="room-name">Hallway</span></div>
+
+    <!-- Desk furniture -->
+    <svg style="position:absolute;left:90px;top:100px;" width="100" height="60" viewBox="0 0 100 60" fill="none">
+      <rect x="2" y="10" width="96" height="46" rx="3" stroke="#25233a" stroke-width="1.5" fill="none" opacity="0.2"/>
+      <rect x="30" y="2" width="40" height="26" rx="2" stroke="#25233a" stroke-width="1" fill="none" opacity="0.15"/>
+      <line x1="48" y1="28" x2="52" y2="35" stroke="#25233a" stroke-width="1" opacity="0.12"/>
+    </svg>
+
+    <!-- Interview furniture -->
+    <svg style="position:absolute;left:700px;top:90px;" width="110" height="70" viewBox="0 0 110 70" fill="none">
+      <rect x="20" y="18" width="70" height="34" rx="3" stroke="#25233a" stroke-width="1.5" fill="none" opacity="0.2"/>
+      <circle cx="55" cy="9" r="7" stroke="#25233a" stroke-width="1" fill="none" opacity="0.15"/>
+      <circle cx="55" cy="61" r="7" stroke="#25233a" stroke-width="1" fill="none" opacity="0.15"/>
+    </svg>
+
+    <!-- Break room furniture -->
+    <svg style="position:absolute;left:80px;top:390px;" width="60" height="60" viewBox="0 0 60 60" fill="none">
+      <rect x="8" y="4" width="38" height="48" rx="4" stroke="#25233a" stroke-width="1.5" fill="none" opacity="0.2"/>
+      <circle cx="27" cy="28" r="10" stroke="#25233a" stroke-width="1" fill="none" opacity="0.15"/>
+      <rect x="12" y="44" width="12" height="4" rx="1" stroke="#25233a" stroke-width="0.8" fill="none" opacity="0.12"/>
+    </svg>
+    <svg style="position:absolute;left:155px;top:420px;" width="100" height="50" viewBox="0 0 100 50" fill="none">
+      <rect x="4" y="4" width="92" height="42" rx="3" stroke="#25233a" stroke-width="1.5" fill="none" opacity="0.15"/>
+    </svg>
+
+    <!-- Meeting room table -->
+    <svg style="position:absolute;left:670px;top:390px;" width="180" height="60" viewBox="0 0 180 60" fill="none">
+      <rect x="8" y="12" width="164" height="36" rx="4" stroke="#25233a" stroke-width="1.5" fill="none" opacity="0.2"/>
+      <circle cx="40" cy="6" r="5" stroke="#25233a" stroke-width="1" fill="none" opacity="0.12"/>
+      <circle cx="90" cy="6" r="5" stroke="#25233a" stroke-width="1" fill="none" opacity="0.12"/>
+      <circle cx="140" cy="6" r="5" stroke="#25233a" stroke-width="1" fill="none" opacity="0.12"/>
+      <circle cx="40" cy="54" r="5" stroke="#25233a" stroke-width="1" fill="none" opacity="0.12"/>
+      <circle cx="90" cy="54" r="5" stroke="#25233a" stroke-width="1" fill="none" opacity="0.12"/>
+      <circle cx="140" cy="54" r="5" stroke="#25233a" stroke-width="1" fill="none" opacity="0.12"/>
+    </svg>
+
+    <!-- Character — 4x larger, in break room near table -->
+    <svg style="position:absolute;left:205px;top:405px;" width="80" height="112" viewBox="0 0 20 28" fill="none">
+      <ellipse cx="10" cy="27" rx="6" ry="1.5" fill="#25233a" fill-opacity="0.18"/>
+      <rect x="5" y="12" width="10" height="10" rx="2" fill="#25233a"/>
+      <circle cx="10" cy="7" r="5.5" fill="#25233a"/>
+      <circle cx="6.5" cy="7" r="0.9" fill="#f5f2eb"/>
+      <circle cx="11.5" cy="7" r="0.9" fill="#f5f2eb"/>
+      <rect x="6" y="22" width="3" height="4.5" rx="1" fill="#25233a"/>
+      <rect x="11" y="22" width="3" height="4.5" rx="1" fill="#25233a"/>
+    </svg>
+
+  </div>
+
+  <div class="vignette"></div>
+  <div class="vignette-tb"></div>
+
+  <div class="title-block">
+    <div class="title">Social<br>Script</div>
+  </div>
+
+</body>
+</html>

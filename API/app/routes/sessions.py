@@ -37,27 +37,65 @@ def get_gemini() -> GeminiClient:
     return gemini_client
 
 
-def _split_message_and_options(raw: str) -> tuple[str, list[str]]:
-    """Split an AI response into the in-character message and the numbered options."""
+def _parse_structured_response(raw: str) -> dict:
+    """Parse AI response into character_name, narration, dialogue, signal, and options."""
+    result = {"character_name": "", "narration": "", "dialogue": "", "mood": "neutral", "signal": "", "options": []}
+
+    # Extract CHARACTER:
+    char_match = re.search(r'CHARACTER:\s*(.+)', raw)
+    if char_match:
+        result["character_name"] = char_match.group(1).strip()
+
+    # Extract SCENE:
+    scene_match = re.search(r'SCENE:\s*(.+)', raw)
+    if scene_match:
+        result["narration"] = scene_match.group(1).strip()
+
+    # Extract MOOD:
+    mood_match = re.search(r'MOOD:\s*(\w+)', raw)
+    if mood_match:
+        valid_moods = {"neutral", "pleased", "skeptical", "concerned", "impressed", "uncomfortable", "amused", "thoughtful"}
+        mood_val = mood_match.group(1).strip().lower()
+        if mood_val in valid_moods:
+            result["mood"] = mood_val
+
+    # Extract SIGNAL:
+    signal_match = re.search(r'SIGNAL:\s*(.+)', raw)
+    if signal_match:
+        result["signal"] = signal_match.group(1).strip()
+
+    # Extract DIALOGUE:
+    dialogue_match = re.search(r'DIALOGUE:\s*(.+?)(?=\nOPTIONS:|\nSCENE:|\nCHARACTER:|\nSIGNAL:|\nMOOD:|$)', raw, re.DOTALL)
+    if dialogue_match:
+        result["dialogue"] = dialogue_match.group(1).strip()
+
+    # Extract OPTIONS:
     parts = re.split(r'\nOPTIONS:\s*\n', raw, maxsplit=1)
-    message = parts[0].strip()
-    options = []
     if len(parts) > 1:
         for line in parts[1].strip().splitlines():
             cleaned = re.sub(r'^\d+[\.\)]\s*', '', line.strip())
             if cleaned:
-                options.append(cleaned)
-    # Guarantee at least 3 options even if parsing fails
-    if len(options) < 3:
-        options = options or []
-        defaults = [
-            "Respond confidently and directly.",
-            "Take a cautious, polite approach.",
-            "Ask a clarifying question first.",
-        ]
-        while len(options) < 3:
-            options.append(defaults[len(options)])
-    return message, options[:3]
+                result["options"].append(cleaned)
+
+    # Guarantee at least 3 options
+    defaults = [
+        "[Direct] I'd like to address this head-on.",
+        "[Diplomatic] Let me think about the best way to approach this.",
+        "[Curious] Can you tell me more about what you're thinking?",
+    ]
+    while len(result["options"]) < 3:
+        result["options"].append(defaults[len(result["options"])])
+    result["options"] = result["options"][:3]
+
+    # Fallback: if no DIALOGUE found, treat the whole pre-OPTIONS text as dialogue
+    if not result["dialogue"]:
+        fallback = parts[0].strip()
+        # Remove CHARACTER/SCENE lines from fallback
+        fallback = re.sub(r'CHARACTER:\s*.+\n?', '', fallback)
+        fallback = re.sub(r'SCENE:\s*.+\n?', '', fallback)
+        result["dialogue"] = fallback.strip()
+
+    return result
 
 
 def _parse_hint(raw_hint: str) -> HintPayload:
@@ -134,12 +172,15 @@ def create_session(payload: SessionCreateRequest) -> SessionCreateResponse:
         user_context=payload.userContext,
     )
     raw_opening = get_gemini().generate_text(build_opening_prompt(state))
-    message, options = _split_message_and_options(raw_opening)
-    state.messages.append({"role": "assistant", "content": message})
+    parsed = _parse_structured_response(raw_opening)
+    state.messages.append({"role": "assistant", "content": parsed["dialogue"]})
     return SessionCreateResponse(
         sessionId=state.session_id,
-        aiOpeningMessage=message,
-        responseOptions=options,
+        aiOpeningMessage=parsed["dialogue"],
+        narration=parsed["narration"],
+        characterName=parsed["character_name"],
+        mood=parsed.get("mood", "neutral"),
+        responseOptions=parsed["options"],
         conversationState="active",
     )
 
@@ -152,8 +193,8 @@ def create_turn(session_id: str, payload: TurnRequest) -> TurnResponse:
 
     state.messages.append({"role": "user", "content": payload.userMessage})
     raw_response = get_gemini().generate_text(build_turn_prompt(state, payload.userMessage))
-    ai_message, options = _split_message_and_options(raw_response)
-    state.messages.append({"role": "assistant", "content": ai_message})
+    parsed = _parse_structured_response(raw_response)
+    state.messages.append({"role": "assistant", "content": parsed["dialogue"]})
 
     hint = None
     if payload.requestHint:
@@ -161,10 +202,13 @@ def create_turn(session_id: str, payload: TurnRequest) -> TurnResponse:
         hint = _parse_hint(hint_raw)
 
     return TurnResponse(
-        aiMessage=ai_message,
-        responseOptions=options,
+        aiMessage=parsed["dialogue"],
+        narration=parsed["narration"],
+        responseOptions=parsed["options"],
         hint=hint,
         turnNumber=len([m for m in state.messages if m["role"] == "user"]),
+        mood=parsed.get("mood", "neutral"),
+        socialSignal=parsed.get("signal", ""),
         progressSignals=[
             "maintained conversation",
             "responded to prompt",
@@ -202,14 +246,17 @@ def simulate_conversation(payload: SimulateConversationRequest) -> SimulateConve
         difficulty=payload.difficulty or "medium",
     )
     raw_opening = get_gemini().generate_text(build_opening_prompt(state))
-    message, _ = _split_message_and_options(raw_opening)
+    opening_parsed = _parse_structured_response(raw_opening)
+    message = opening_parsed["dialogue"]
     state.messages.append({"role": "assistant", "content": message})
 
     simulated_turns = []
     for user_message in payload.userMessages:
         state.messages.append({"role": "user", "content": user_message})
         raw = get_gemini().generate_text(build_turn_prompt(state, user_message))
-        ai_message, turn_options = _split_message_and_options(raw)
+        turn_parsed = _parse_structured_response(raw)
+        ai_message = turn_parsed["dialogue"]
+        turn_options = turn_parsed["options"]
         state.messages.append({"role": "assistant", "content": ai_message})
         hint = None
         if payload.requestHintEachTurn:

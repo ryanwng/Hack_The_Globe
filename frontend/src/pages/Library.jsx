@@ -1,10 +1,6 @@
+import { useMemo, useState } from 'react'
 import styles from './Library.module.css'
 import PageShell from '../components/PageShell'
-
-const PRACTICED = [
-  { title: 'Small talk at the coffee machine', location: 'Break Room', times: 3, lastGoal: 'I just want to get through this without freezing up.', date: 'Mar 18' },
-  { title: 'First job interview', location: 'Interview Room', times: 1, lastGoal: 'I want to come across as competent and professional.', date: 'Mar 20' },
-]
 
 const AVAILABLE = [
   { id: 'follow-up', title: 'Following up after an interview', location: 'Interview Room', tag: 'Low pressure' },
@@ -15,40 +11,99 @@ const AVAILABLE = [
   { id: 'forgotten-name', title: 'Forgetting a colleague\'s name', location: 'Hallway', tag: 'Awkward moments' },
 ]
 
+function formatDate(iso) {
+  try {
+    const d = new Date(iso)
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  } catch { return '' }
+}
+
 export default function Library({ navigate }) {
+  const [expandedEntry, setExpandedEntry] = useState(null)
+  const [journalVersion, setJournalVersion] = useState(0)
+
+  const journal = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem('socialscript_journal') || '[]')
+    } catch { return [] }
+  }, [journalVersion])
+
+  const clearJournal = () => {
+    if (confirm('Clear your entire session journal? This cannot be undone.')) {
+      localStorage.removeItem('socialscript_journal')
+      setExpandedEntry(null)
+      setJournalVersion(v => v + 1)
+    }
+  }
+
   return (
     <PageShell navigate={navigate}>
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.title}>My Library</h1>
-          <p className={styles.subtitle}>Your personal record of scenarios practiced.</p>
+          <h1 className={styles.title}>Session Journal</h1>
+          <p className={styles.subtitle}>Your private record of every conversation practiced.</p>
         </div>
 
         <div className={styles.divider} />
 
-        {/* Practiced */}
+        {/* Journal entries */}
         <section className={styles.section}>
-          <span className={styles.sectionLabel}>Practiced</span>
-          {PRACTICED.length === 0 && (
-            <p className={styles.empty}>You haven't practiced any scenarios yet. Start with the workplace map.</p>
+          <div className={styles.sectionTop}>
+            <span className={styles.sectionLabel}>Past sessions ({journal.length})</span>
+            {journal.length > 0 && (
+              <button className={styles.clearBtn} onClick={clearJournal}>Clear all</button>
+            )}
+          </div>
+          {journal.length === 0 && (
+            <p className={styles.empty}>No sessions yet. Complete a scenario from the workplace map to see it here.</p>
           )}
           <div className={styles.practicedList}>
-            {PRACTICED.map(p => (
-              <div key={p.title} className={styles.practicedCard}>
+            {journal.map((entry, idx) => (
+              <div
+                key={entry.id || idx}
+                className={`${styles.practicedCard} ${expandedEntry === idx ? styles.practicedCardExpanded : ''}`}
+                onClick={() => setExpandedEntry(expandedEntry === idx ? null : idx)}
+              >
                 <div className={styles.practicedTop}>
-                  <span className={styles.practicedLocation}>{p.location}</span>
-                  <span className={styles.practicedDate}>{p.date}</span>
+                  <span className={styles.practicedLocation}>
+                    {entry.characterName && `${entry.characterName} · `}{entry.scenarioTitle}
+                  </span>
+                  <span className={styles.practicedDate}>{formatDate(entry.date)}</span>
                 </div>
-                <h3 className={styles.practicedTitle}>{p.title}</h3>
                 <p className={styles.practicedGoal}>
-                  <em>Last goal:</em> {p.lastGoal}
+                  <em>Goal:</em> {entry.goal}
                 </p>
                 <div className={styles.practicedMeta}>
-                  <span className={styles.timesLabel}>Practiced {p.times}×</span>
-                  <button className={styles.replaySmall} onClick={() => navigate('map')}>
-                    Practice again →
-                  </button>
+                  <span className={styles.timesLabel}>{entry.turnCount} turn{entry.turnCount !== 1 ? 's' : ''}</span>
                 </div>
+
+                {/* Expanded: show feedback summary */}
+                {expandedEntry === idx && entry.feedback && (
+                  <div className={styles.journalDetail}>
+                    {entry.feedback.strengths?.length > 0 && (
+                      <div className={styles.journalSection}>
+                        <span className={styles.journalSectionLabel}>Strengths</span>
+                        <ul className={styles.journalList}>
+                          {entry.feedback.strengths.map((s, i) => <li key={i}>{s}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                    {entry.feedback.improvements?.length > 0 && (
+                      <div className={styles.journalSection}>
+                        <span className={styles.journalSectionLabel}>To improve</span>
+                        <ul className={styles.journalList}>
+                          {entry.feedback.improvements.map((s, i) => <li key={i}>{s}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                    {entry.feedback.nextPracticeFocus && (
+                      <div className={styles.journalSection}>
+                        <span className={styles.journalSectionLabel}>Next focus</span>
+                        <p className={styles.journalFocus}>{entry.feedback.nextPracticeFocus}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -73,7 +128,7 @@ export default function Library({ navigate }) {
         <div className={styles.divider} />
 
         <div className={styles.note}>
-          <p>Your library is private. No one else can see what you've practiced or how many times. This is for you.</p>
+          <p>Your journal is stored locally on this device. No one else can see what you've practiced or how many times. This is for you.</p>
         </div>
       </div>
     </PageShell>

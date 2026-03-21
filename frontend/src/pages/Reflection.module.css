@@ -64,14 +64,62 @@
   font-style: italic;
 }
 
-/* History */
+/* Annotated replay */
+.replayNote {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
 .historyItem {
-  padding: 1rem 0;
-  border-bottom: 1px dashed var(--line);
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  cursor: pointer;
+  transition: background 0.1s;
 }
 
 .historyItem:last-child {
-  border-bottom: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.historyItem:hover {
+  background: var(--paper-dark);
+}
+
+.historyItemExpanded {
+  background: var(--paper-dark);
+}
+
+.turnHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.turnNumber {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.turnSignalDot {
+  font-size: 0.5rem;
+  color: var(--ink-faint);
+}
+
+.speakerTag {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-right: 0.5rem;
 }
 
 .historyQ {
@@ -90,15 +138,29 @@
   line-height: 1.6;
 }
 
-.historyOutcome {
+.turnSignal {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-left: 3px solid var(--ink-faint);
+  background: var(--paper);
+}
+
+.turnSignalIcon {
+  font-size: 0.5rem;
+  color: var(--ink-faint);
+  flex-shrink: 0;
+  margin-top: 0.2em;
+}
+
+.turnSignalText {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
   color: var(--ink-light);
-  line-height: 1.6;
   font-style: italic;
-  border-left: 2px solid var(--paper-shadow);
-  padding-left: 0.8rem;
-  margin-top: 0.3rem;
 }
 
 /* Prompts */
@@ -167,44 +229,3 @@
   border-color: var(--ink);
 }
 
-/* Save card */
-.saveCard {
-  border: 1px dashed var(--paper-shadow);
-  padding: 1.4rem 1.6rem;
-  background: var(--paper-dark);
-}
-
-.saveLabel {
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.saveText {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.65;
-  color: var(--ink-light);
-  margin-bottom: 1rem;
-}
-
-.saveBtn {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  background: none;
-  border: 1px solid var(--ink);
-  color: var(--ink);
-  padding: 0.45rem 1rem;
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s;
-}
-
-.saveBtn:hover {
-  background: var(--ink);
-  color: var(--paper);
-}

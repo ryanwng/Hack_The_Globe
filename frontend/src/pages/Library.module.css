@@ -62,10 +62,20 @@
   padding: 1.2rem 1.4rem;
   background: var(--paper);
   border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.practicedCard:hover {
+  background: var(--paper-dark);
 }
 
 .practicedCard:last-child {
   border-bottom: none;
+}
+
+.practicedCardExpanded {
+  background: var(--paper-dark);
 }
 
 .practicedTop {
@@ -87,15 +97,6 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--ink-faint);
-}
-
-.practicedTitle {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: normal;
-  color: var(--ink);
-  margin-bottom: 0.4rem;
-  letter-spacing: 0.02em;
 }
 
 .practicedGoal {
@@ -177,6 +178,92 @@
   color: var(--ink-faint);
   margin-top: auto;
   padding-top: 0.4rem;
+}
+
+/* Section top row */
+.sectionTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.sectionTop .sectionLabel {
+  margin-bottom: 0;
+}
+
+.clearBtn {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--ink-faint);
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.clearBtn:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Journal detail (expanded) */
+.journalDetail {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.journalSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.journalSectionLabel {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.journalList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.journalList li {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--ink-light);
+  padding-left: 0.8rem;
+  position: relative;
+}
+
+.journalList li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--ink-faint);
+}
+
+.journalFocus {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--ink-light);
+  font-style: italic;
+  margin: 0;
 }
 
 /* Note */

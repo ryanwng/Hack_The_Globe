@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(md5 /Users/woochachino/Hack_The_Globe/paper.jpg /Users/woochachino/Hack_The_Globe/frontend/public/paper.jpg)"
+      "Bash(md5 /Users/woochachino/Hack_The_Globe/paper.jpg /Users/woochachino/Hack_The_Globe/frontend/public/paper.jpg)",
+      "Bash(python -c \"from app.routes.sessions import router; from app.models import TurnResponse; print\\(''OK''\\)\")",
+      "Bash(python -c \"from app.services.prompt_builder import build_opening_prompt, build_turn_prompt; print\\(''OK''\\)\")",
+      "Bash(python3 -m py_compile /Users/woochachino/Hack_The_Globe/API/app/models.py)",
+      "Bash(python3 -m py_compile /Users/woochachino/Hack_The_Globe/API/app/routes/sessions.py)",
+      "Bash(python3 -m py_compile /Users/woochachino/Hack_The_Globe/API/app/routes/voice.py)",
+      "Bash(python3 -m py_compile /Users/woochachino/Hack_The_Globe/API/app/services/session_store.py)",
+      "Bash(python3 -m py_compile /Users/woochachino/Hack_The_Globe/API/app/services/gemini_client.py)",
+      "Bash(python3 -m py_compile /Users/woochachino/Hack_The_Globe/API/app/services/prompt_builder.py)",
+      "Bash(python3 -c \":*)"
     ]
   }
 }
