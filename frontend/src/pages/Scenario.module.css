@@ -1,14 +1,33 @@
 .page {
-  max-width: 680px;
+  max-width: 660px;
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 2rem 0 4rem;
 }
 
+/* ── Header ── */
 .scenarioHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.backBtn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.12s;
+  white-space: nowrap;
+}
+
+.backBtn:hover {
+  color: var(--ink);
 }
 
 .breadcrumb {
@@ -17,6 +36,11 @@
   letter-spacing: 0.1em;
   color: var(--ink-faint);
   text-transform: uppercase;
+  text-align: center;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .headerControls {
@@ -51,6 +75,7 @@
   padding: 0.3rem 0.7rem;
   cursor: pointer;
   transition: border-color 0.12s, color 0.12s;
+  white-space: nowrap;
 }
 
 .pauseBtn:hover {
@@ -58,7 +83,7 @@
   color: var(--ink);
 }
 
-/* Pause card */
+/* ── Pause card ── */
 .pauseCard {
   border: 1px solid var(--line);
   padding: 3rem 2rem;
@@ -79,7 +104,6 @@
   font-size: 0.88rem;
   color: var(--ink-light);
   margin-bottom: 1.8rem;
-  line-height: 1.7;
 }
 
 .resumeBtn {
@@ -87,7 +111,6 @@
   margin: 0 auto 0.8rem;
   font-family: var(--font-display);
   font-size: 0.9rem;
-  letter-spacing: 0.04em;
   background: var(--ink);
   color: var(--paper);
   border: 2px solid var(--ink);
@@ -108,90 +131,162 @@
   text-underline-offset: 3px;
 }
 
-/* Goal phase */
+/* ── Goal phase ── */
 .goalPhase {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-.settingCard {
-  border-left: 3px solid var(--ink-faint);
-  padding: 1rem 1.2rem;
+/* Scene banner */
+.sceneBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  border: 1px solid var(--line);
+  padding: 1.2rem 1.4rem;
   background: var(--paper-dark);
 }
 
-.settingLabel {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.sceneArt {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
   color: var(--ink-faint);
-  display: block;
-  margin-bottom: 0.5rem;
+  margin: 0;
+  flex-shrink: 0;
+  user-select: none;
 }
 
-.settingText {
+.sceneInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.15rem;
+}
+
+.sceneLabel {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.sceneTitle {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--ink);
+  margin: 0;
+}
+
+.sceneDesc {
   font-family: var(--font-mono);
-  font-size: 0.88rem;
-  line-height: 1.75;
+  font-size: 0.82rem;
+  line-height: 1.7;
   color: var(--ink-light);
+  margin: 0;
   font-style: italic;
+}
+
+/* Goal form */
+.goalSection {
+  display: flex;
+  flex-direction: column;
 }
 
 .goalHeading {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: normal;
   color: var(--ink);
-  margin-bottom: 0.4rem;
-  letter-spacing: 0.02em;
+  margin-bottom: 0.3rem;
 }
 
 .goalNote {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--ink-faint);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.4rem;
   font-style: italic;
 }
 
-.goalOptions {
+.inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
 }
 
-.goalOption {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  line-height: 1.5;
-  text-align: left;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  color: var(--ink-light);
-  padding: 0.85rem 1.1rem;
-  cursor: pointer;
-  transition: border-color 0.12s, background 0.12s;
-}
-
-.goalOption:hover {
-  border-color: var(--ink);
-  background: var(--paper-dark);
+.inputLabel {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
   color: var(--ink);
 }
 
-.goalSelected {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
+.optional {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  letter-spacing: 0;
 }
 
-/* Chat */
+.goalInput,
+.contextInput {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.goalInput {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.goalInput:focus,
+.contextInput:focus {
+  border-color: var(--ink);
+}
+
+.goalInput::placeholder,
+.contextInput::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.startBtn {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+  transition: opacity 0.12s;
+  width: 100%;
+}
+
+.startBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Chat phase ── */
 .chatPhase {
   display: flex;
   flex-direction: column;
-  gap: 1.4rem;
+  gap: 1.2rem;
 }
 
 .goalReminder {
@@ -214,32 +309,33 @@
   font-style: italic;
 }
 
-.historyTurn {
+/* Thread */
+.thread {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  opacity: 0.55;
+  gap: 1rem;
 }
 
-.characterBubble, .userBubble {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
+.characterBubble,
 .userBubble {
-  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.speakerHeader {
+<<<<<<< HEAD .speakerHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.speakerName {
+=======.userBubble {
+  align-items: flex-end;
+}
+
+>>>>>>>142b8270588abdf05001ff4f4f584ff742f6acaa .speakerName {
   font-family: var(--font-display);
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -264,38 +360,80 @@
   font-size: 0.9rem;
   line-height: 1.7;
   color: var(--ink);
-  max-width: 90%;
+  max-width: 88%;
+  margin: 0;
 }
 
 .characterBubble .bubbleText {
   background: var(--paper-dark);
-  padding: 0.9rem 1.1rem;
+  padding: 0.85rem 1.1rem;
   border-left: 2px solid var(--ink-faint);
 }
 
 .userBubble .bubbleText {
   background: var(--paper);
   border: 1px solid var(--line);
-  padding: 0.9rem 1.1rem;
+  padding: 0.85rem 1.1rem;
   text-align: right;
 }
 
-/* Choices */
+/* Typing indicator */
+.typingDots {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--ink-faint);
+  padding: 0.6rem 1.1rem;
+  background: var(--paper-dark);
+  border-left: 2px solid var(--ink-faint);
+  margin: 0;
+  max-width: 88%;
+  letter-spacing: 0.1em;
+}
+
+.typingDots span {
+  animation: blink 1.2s infinite;
+}
+
+.typingDots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typingDots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+  }
+
+  40% {
+    opacity: 1;
+  }
+}
+
+/* ── Choices ── */
 .choices {
-  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .choicesPrompt {
   font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
 }
 
 .choiceBtn {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
   width: 100%;
   text-align: left;
   font-family: var(--font-mono);
@@ -305,9 +443,9 @@
   border: 1px solid var(--line);
   border-bottom: none;
   color: var(--ink-light);
-  padding: 0.85rem 1.1rem;
+  padding: 0.8rem 1rem;
   cursor: pointer;
-  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
 
 .choiceBtn:last-child {
@@ -320,24 +458,25 @@
   border-color: var(--ink-faint);
 }
 
+.choiceNum {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  flex-shrink: 0;
+  padding-top: 0.1em;
+  min-width: 1rem;
+}
+
 .choiceFree {
   font-style: italic;
   color: var(--ink-faint);
 }
 
-/* Free text */
+/* ── Free text input ── */
 .freeInput {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-}
-
-.freePrompt {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+  gap: 0.6rem;
 }
 
 .freeTextarea {
@@ -347,7 +486,7 @@
   background: var(--paper);
   border: 1px solid var(--line);
   color: var(--ink);
-  padding: 0.85rem 1.1rem;
+  padding: 0.8rem 1rem;
   resize: vertical;
   outline: none;
   transition: border-color 0.12s;
@@ -358,6 +497,16 @@
 }
 
 .freeTextarea::placeholder {
+  color: var(--ink-faint);
+}
+
+.freeRow {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+<<<<<<< HEAD .freeTextarea::placeholder {
   color: var(--ink-faint);
 }
 
@@ -394,241 +543,245 @@
 }
 
 @keyframes pulse-mic {
-  0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.3); }
-  70% { box-shadow: 0 0 0 6px rgba(220, 53, 69, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.3);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(220, 53, 69, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
 }
 
 .freeSubmit {
   align-self: flex-start;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  letter-spacing: 0.06em;
-  background: var(--ink);
-  color: var(--paper);
-  border: none;
-  padding: 0.55rem 1.1rem;
-  cursor: pointer;
-  transition: opacity 0.12s;
-}
 
-.freeSubmit:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
+  =======.sendBtn {
+    >>>>>>>142b8270588abdf05001ff4f4f584ff742f6acaa font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0.55rem 1.2rem;
+    cursor: pointer;
+    transition: opacity 0.12s;
+  }
 
-/* Chose display */
-.choseDisplay {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
+  .sendBtn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
 
-.revealBtn {
-  align-self: flex-end;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  letter-spacing: 0.06em;
-  background: none;
-  border: 1px solid var(--ink);
-  color: var(--ink);
-  padding: 0.5rem 1.1rem;
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s;
-}
+  .backToOptions {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.12s;
+  }
 
-.revealBtn:hover {
-  background: var(--ink);
-  color: var(--paper);
-}
+  .backToOptions:hover {
+    color: var(--ink);
+  }
 
-/* Outcome */
-.hintCard {
-  background: var(--paper-dark);
-  border: 1px solid var(--line);
-  padding: 1.2rem 1.4rem;
-  margin-top: 1rem;
-}
+  /* ── Hint panel ── */
+  .hintPanel {
+    border: 1px dashed var(--ink-faint);
+    background: var(--paper-dark);
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
 
-.hintHeader {
-  margin-bottom: 0.8rem;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 0.6rem;
-}
+  <<<<<<< HEAD .revealBtn {
+    align-self: flex-end;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    background: none;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
 
-.hintHeaderLabel {
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
+  .revealBtn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
 
-.hintPerspective {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--ink-light);
-  margin-bottom: 1rem;
-}
+  /* Outcome */
+  .hintCard {
+    background: var(--paper-dark);
+    border: 1px solid var(--line);
+    padding: 1.2rem 1.4rem;
+    margin-top: 1rem;
+  }
 
-.hintActionBox {
-  background: var(--paper);
-  border-left: 3px solid var(--ink);
-  padding: 0.8rem 1rem;
-  margin-bottom: 1rem;
-}
+  .hintHeader {
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.6rem;
+  }
 
-.hintAction {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: var(--ink);
-}
+  .hintHeaderLabel {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
 
-.hintActionLabel {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  margin-right: 0.4rem;
-}
+  .hintPerspective {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-light);
+    margin-bottom: 1rem;
+  }
 
-.hintWhy {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.6;
-  color: var(--ink-faint);
-  font-style: italic;
-}
+  .hintActionBox {
+    background: var(--paper);
+    border-left: 3px solid var(--ink);
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+  }
 
-.outcomeSection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-}
+  .hintAction {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
 
-.thinkingCard, .outcomeCard {
-  padding: 1rem 1.2rem;
-  border: 1px dashed var(--paper-shadow);
-  background: var(--paper-dark);
-}
+  .hintActionLabel {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    margin-right: 0.4rem;
+  }
 
-.thinkingLabel, .outcomeLabel {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 0.68rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 0.4rem;
-}
+  .hintWhy {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
 
-.thinkingText, .outcomeText {
-  font-family: var(--font-mono);
-  font-size: 0.86rem;
-  line-height: 1.7;
-  color: var(--ink-light);
-}
+  .outcomeSection {
+    =======.hintPanelHeader {
+      >>>>>>>142b8270588abdf05001ff4f4f584ff742f6acaa display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-.nextRow {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding-top: 0.3rem;
-}
+    .hintPanelLabel {
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
 
-.tryAgainBtn {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  background: none;
-  border: 1px solid var(--ink-faint);
-  color: var(--ink-faint);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: color 0.12s, border-color 0.12s;
-}
+    .hintClose {
+      background: none;
+      border: none;
+      color: var(--ink-faint);
+      cursor: pointer;
+      font-size: 0.75rem;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.1s;
+    }
 
-.tryAgainBtn:hover {
-  color: var(--ink);
-  border-color: var(--ink);
-}
+    .hintClose:hover {
+      color: var(--ink);
+    }
 
-.continueBtn {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  background: var(--ink);
-  color: var(--paper);
-  border: 2px solid var(--ink);
-  padding: 0.55rem 1.3rem;
-  cursor: pointer;
-  transition: background 0.12s;
-}
+    .hintRow {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
 
-.startBtn:hover:not(:disabled) {
-  background: var(--accent);
-  border-color: var(--accent);
-}
+    .hintKey {
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
 
-.startBtn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+    .hintVal {
+      font-family: var(--font-mono);
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: var(--ink-light);
+      margin: 0;
+    }
 
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
+    /* ── Action bar ── */
+    .actionBar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--line);
+      gap: 1rem;
+    }
 
-.inputLabel {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-  font-weight: 600;
-}
+    .hintBtn {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      background: none;
+      border: 1px solid var(--ink-faint);
+      color: var(--ink-faint);
+      padding: 0.45rem 1rem;
+      cursor: pointer;
+      transition: color 0.12s, border-color 0.12s;
+    }
 
-.goalInput, .contextInput {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 0.85rem 1.1rem;
-  outline: none;
-  transition: border-color 0.12s;
-}
+    .hintBtn:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
 
-.goalInput {
-  resize: vertical;
-  min-height: 80px;
-}
+    .finishBtn {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      background: var(--ink);
+      color: var(--paper);
+      border: 2px solid var(--ink);
+      padding: 0.5rem 1.3rem;
+      cursor: pointer;
+      transition: opacity 0.12s;
+    }
 
-.goalInput:focus, .contextInput:focus {
-  border-color: var(--ink);
-}
+    .finishBtn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
 
-.goalInput::placeholder, .contextInput::placeholder {
-  color: var(--ink-faint);
-  font-style: italic;
-}
-
-.startBtn {
-  margin-top: 1rem;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  letter-spacing: 0.04em;
-  background: var(--ink);
-  color: var(--paper);
-  border: 2px solid var(--ink);
-  padding: 0.8rem 2rem;
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, opacity 0.12s;
-  width: 100%;
-}
+    /* ── Error ── */
+    .errorText {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      border: 1px solid var(--line);
+      background: var(--paper-dark);
+      padding: 0.7rem 1rem;
+      margin: 0;
+    }
