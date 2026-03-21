@@ -19,6 +19,98 @@
   --font-serif: 'IM Fell English', Georgia, serif;
 }
 
+/* ─── Soft Light: cream / sepia ─── */
+[data-theme="soft-light"] {
+  --paper: #fffdd0;
+  --paper-dark: #f5f0b8;
+  --paper-shadow: #e0d898;
+  --ink: #3d3428;
+  --ink-light: #5c4e3a;
+  --ink-faint: #9a8f78;
+  --accent: #7a5c3e;
+  --accent-warm: #8a4a2e;
+  --line: rgba(61, 52, 40, 0.1);
+}
+
+/* ─── Midnight: deep charcoal / navy ─── */
+[data-theme="midnight"] {
+  --paper: #1a1a2e;
+  --paper-dark: #141428;
+  --paper-shadow: #0f0f20;
+  --ink: #d0d0e0;
+  --ink-light: #a8a8c0;
+  --ink-faint: #6a6a80;
+  --accent: #7a9cbf;
+  --accent-warm: #bf9a7a;
+  --line: rgba(208, 208, 224, 0.1);
+}
+
+/* ─── Low-Stim: muted sage / earth ─── */
+[data-theme="low-stim"] {
+  --paper: #e8ede9;
+  --paper-dark: #dae3db;
+  --paper-shadow: #c8d4c9;
+  --ink: #2d4a3e;
+  --ink-light: #4a6e5e;
+  --ink-faint: #7a9e8e;
+  --accent: #3a6e5e;
+  --accent-warm: #7a6e3a;
+  --line: rgba(45, 74, 62, 0.12);
+}
+
+/* ─── Dyslexia-Friendly: warm peach + readable font ─── */
+[data-theme="dyslexia"] {
+  --paper: #fef3e2;
+  --paper-dark: #fce8c8;
+  --paper-shadow: #f5d8a8;
+  --ink: #2d2318;
+  --ink-light: #4a3828;
+  --ink-faint: #8a7560;
+  --accent: #5c4a2e;
+  --accent-warm: #7a3e2e;
+  --line: rgba(45, 35, 24, 0.12);
+  --font-mono: 'Atkinson Hyperlegible', 'Courier Prime', monospace;
+  --font-display: 'Atkinson Hyperlegible', 'Special Elite', monospace;
+  --font-serif: 'Atkinson Hyperlegible', Georgia, serif;
+}
+
+/* ─── Low Contrast: intentionally reduced contrast ratio ─── */
+[data-theme="low-contrast"] {
+  --paper: #d4d0c8;
+  --paper-dark: #c8c4bc;
+  --paper-shadow: #b8b4ac;
+  --ink: #6a6558;
+  --ink-light: #847e70;
+  --ink-faint: #a8a49c;
+  --accent: #7a7868;
+  --accent-warm: #8a7a68;
+  --line: rgba(106, 101, 88, 0.08);
+}
+
+/* ─── Functional Toggles ─── */
+
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+html.reduce-motion {
+  scroll-behavior: auto !important;
+}
+
+html.font-spacing body {
+  line-height: 2.2;
+  letter-spacing: 0.05em;
+  word-spacing: 0.12em;
+}
+
+html.monochrome {
+  filter: grayscale(100%);
+}
+
 html {
   font-size: 16px;
   scroll-behavior: smooth;

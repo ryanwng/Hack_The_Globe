@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import styles from './WorkplaceMap.module.css'
 import PageShell from '../components/PageShell'
+import { useTheme } from '../context/ThemeContext'
 
 // ── Constants ──────────────────────────────────────────────
 const MAP_W = 960  // total map width in px
@@ -154,11 +155,17 @@ const DIFFICULTY_LABEL = { gentle: 'Gentle', moderate: 'Moderate', challenging: 
 
 // ── Component ─────────────────────────────────────────────
 export default function WorkplaceMap({ navigate }) {
+  const { reduceMotion } = useTheme()
+
   // Position in pixels
   const [pos, setPos] = useState({ x: 480, y: 300 })
   const [facing, setFacing] = useState('down')
   const [walking, setWalking] = useState(false)
   const [activeRoom, setActiveRoom] = useState(null)
+
+  // Discrete camera for reduce-motion mode
+  const [snapCam, setSnapCam] = useState({ x: 0, y: 0 })
+  const snapCamRef = useRef({ x: 0, y: 0 })
 
   const keysDown = useRef(new Set())
   const posRef = useRef(pos)
@@ -234,6 +241,29 @@ export default function WorkplaceMap({ navigate }) {
     setActiveRoom(room)
   }, [pos])
 
+  // Discrete camera snap for reduce-motion mode
+  // Background stays locked; snaps only when char hits viewport margin
+  useEffect(() => {
+    if (!reduceMotion) return
+    const MARGIN = 40
+    const cam = snapCamRef.current
+    const localX = pos.x - cam.x
+    const localY = pos.y - cam.y
+    const needsSnap =
+      localX < MARGIN ||
+      localX + CHAR_W > VIEW_W - MARGIN ||
+      localY < MARGIN ||
+      localY + CHAR_H > VIEW_H - MARGIN
+    if (needsSnap) {
+      const next = {
+        x: Math.max(0, Math.min(MAP_W - VIEW_W, pos.x + CHAR_W / 2 - VIEW_W / 2)),
+        y: Math.max(0, Math.min(MAP_H - VIEW_H, pos.y + CHAR_H / 2 - VIEW_H / 2)),
+      }
+      snapCamRef.current = next
+      setSnapCam(next)
+    }
+  }, [pos, reduceMotion])
+
   // Key handlers
   useEffect(() => {
     const down = (e) => {
@@ -263,9 +293,9 @@ export default function WorkplaceMap({ navigate }) {
 
   const panelRoom = activeRoom || (inHallway ? { id: 'hallway', label: 'Hallway', icon: '—', scenarios: hallwayScenarios } : null)
 
-  // Camera: keep character centered, clamped to map edges
-  const camX = Math.max(0, Math.min(MAP_W - VIEW_W, pos.x + CHAR_W / 2 - VIEW_W / 2))
-  const camY = Math.max(0, Math.min(MAP_H - VIEW_H, pos.y + CHAR_H / 2 - VIEW_H / 2))
+  // Camera: smooth tracking normally; discrete snap in reduce-motion mode
+  const camX = reduceMotion ? snapCam.x : Math.max(0, Math.min(MAP_W - VIEW_W, pos.x + CHAR_W / 2 - VIEW_W / 2))
+  const camY = reduceMotion ? snapCam.y : Math.max(0, Math.min(MAP_H - VIEW_H, pos.y + CHAR_H / 2 - VIEW_H / 2))
 
   return (
     <PageShell navigate={navigate}>
@@ -410,40 +440,40 @@ function Furniture() {
       {/* Desk room: desk + monitor */}
       <div className={styles.furniture} style={{ left: 90, top: 100, width: 100, height: 60 }}>
         <svg viewBox="0 0 100 60" fill="none" width="100" height="60">
-          <rect x="2" y="10" width="96" height="46" rx="3" stroke="#1a1a2e" strokeWidth="1.5" fill="none" opacity="0.2" />
-          <rect x="30" y="2" width="40" height="26" rx="2" stroke="#1a1a2e" strokeWidth="1" fill="none" opacity="0.15" />
-          <line x1="48" y1="28" x2="52" y2="35" stroke="#1a1a2e" strokeWidth="1" opacity="0.12" />
+          <rect x="2" y="10" width="96" height="46" rx="3" stroke="var(--ink)" strokeWidth="1.5" fill="none" opacity="0.2" />
+          <rect x="30" y="2" width="40" height="26" rx="2" stroke="var(--ink)" strokeWidth="1" fill="none" opacity="0.15" />
+          <line x1="48" y1="28" x2="52" y2="35" stroke="var(--ink)" strokeWidth="1" opacity="0.12" />
         </svg>
       </div>
       {/* Interview room: table + chairs */}
       <div className={styles.furniture} style={{ left: 700, top: 90, width: 110, height: 70 }}>
         <svg viewBox="0 0 110 70" fill="none" width="110" height="70">
-          <rect x="20" y="18" width="70" height="34" rx="3" stroke="#1a1a2e" strokeWidth="1.5" fill="none" opacity="0.2" />
-          <circle cx="55" cy="9" r="7" stroke="#1a1a2e" strokeWidth="1" fill="none" opacity="0.15" />
-          <circle cx="55" cy="61" r="7" stroke="#1a1a2e" strokeWidth="1" fill="none" opacity="0.15" />
+          <rect x="20" y="18" width="70" height="34" rx="3" stroke="var(--ink)" strokeWidth="1.5" fill="none" opacity="0.2" />
+          <circle cx="55" cy="9" r="7" stroke="var(--ink)" strokeWidth="1" fill="none" opacity="0.15" />
+          <circle cx="55" cy="61" r="7" stroke="var(--ink)" strokeWidth="1" fill="none" opacity="0.15" />
         </svg>
       </div>
       {/* Break room: coffee machine + table */}
       <div className={styles.furniture} style={{ left: 80, top: 390, width: 60, height: 60 }}>
         <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
-          <rect x="8" y="4" width="38" height="48" rx="4" stroke="#1a1a2e" strokeWidth="1.5" fill="none" opacity="0.2" />
-          <circle cx="27" cy="28" r="10" stroke="#1a1a2e" strokeWidth="1" fill="none" opacity="0.15" />
-          <rect x="12" y="44" width="12" height="4" rx="1" stroke="#1a1a2e" strokeWidth="0.8" fill="none" opacity="0.12" />
+          <rect x="8" y="4" width="38" height="48" rx="4" stroke="var(--ink)" strokeWidth="1.5" fill="none" opacity="0.2" />
+          <circle cx="27" cy="28" r="10" stroke="var(--ink)" strokeWidth="1" fill="none" opacity="0.15" />
+          <rect x="12" y="44" width="12" height="4" rx="1" stroke="var(--ink)" strokeWidth="0.8" fill="none" opacity="0.12" />
         </svg>
       </div>
       <div className={styles.furniture} style={{ left: 155, top: 420, width: 100, height: 50 }}>
         <svg viewBox="0 0 100 50" fill="none" width="100" height="50">
-          <rect x="4" y="4" width="92" height="42" rx="3" stroke="#1a1a2e" strokeWidth="1.5" fill="none" opacity="0.15" />
+          <rect x="4" y="4" width="92" height="42" rx="3" stroke="var(--ink)" strokeWidth="1.5" fill="none" opacity="0.15" />
         </svg>
       </div>
       {/* Meeting room: long conference table */}
       <div className={styles.furniture} style={{ left: 670, top: 390, width: 180, height: 60 }}>
         <svg viewBox="0 0 180 60" fill="none" width="180" height="60">
-          <rect x="8" y="12" width="164" height="36" rx="4" stroke="#1a1a2e" strokeWidth="1.5" fill="none" opacity="0.2" />
+          <rect x="8" y="12" width="164" height="36" rx="4" stroke="var(--ink)" strokeWidth="1.5" fill="none" opacity="0.2" />
           {[40, 90, 140].map(cx => (
             <g key={cx}>
-              <circle cx={cx} cy="6" r="5" stroke="#1a1a2e" strokeWidth="1" fill="none" opacity="0.12" />
-              <circle cx={cx} cy="54" r="5" stroke="#1a1a2e" strokeWidth="1" fill="none" opacity="0.12" />
+              <circle cx={cx} cy="6" r="5" stroke="var(--ink)" strokeWidth="1" fill="none" opacity="0.12" />
+              <circle cx={cx} cy="54" r="5" stroke="var(--ink)" strokeWidth="1" fill="none" opacity="0.12" />
             </g>
           ))}
         </svg>
@@ -482,15 +512,15 @@ function CharacterSVG({ facing }) {
 
   return (
     <svg width="20" height="28" viewBox="0 0 20 28" fill="none">
-      <ellipse cx="10" cy="27" rx="6" ry="1.5" fill="rgba(26,26,46,0.12)" />
-      <rect x="5" y="12" width="10" height="10" rx="2" fill="#1a1a2e" />
-      <circle cx="10" cy="7" r="5.5" fill="#1a1a2e" />
+      <ellipse cx="10" cy="27" rx="6" ry="1.5" fill="var(--ink)" fillOpacity="0.18" />
+      <rect x="5" y="12" width="10" height="10" rx="2" fill="var(--ink)" />
+      <circle cx="10" cy="7" r="5.5" fill="var(--ink)" />
       {showEyes && <>
-        <circle cx={e.lx} cy={e.ly} r="0.9" fill="#f4f1eb" />
-        <circle cx={e.rx} cy={e.ry} r="0.9" fill="#f4f1eb" />
+        <circle cx={e.lx} cy={e.ly} r="0.9" fill="var(--paper)" />
+        <circle cx={e.rx} cy={e.ry} r="0.9" fill="var(--paper)" />
       </>}
-      <rect x="6" y="22" width="3" height="4.5" rx="1" fill="#1a1a2e" />
-      <rect x="11" y="22" width="3" height="4.5" rx="1" fill="#1a1a2e" />
+      <rect x="6" y="22" width="3" height="4.5" rx="1" fill="var(--ink)" />
+      <rect x="11" y="22" width="3" height="4.5" rx="1" fill="var(--ink)" />
     </svg>
   )
 }

@@ -4,6 +4,8 @@ import WorkplaceMap from './pages/WorkplaceMap'
 import Scenario from './pages/Scenario'
 import Reflection from './pages/Reflection'
 import Library from './pages/Library'
+import { ThemeProvider } from './context/ThemeContext'
+import ThemeSelector from './components/ThemeSelector'
 
 export default function App() {
   const [page, setPage] = useState('landing')
@@ -18,12 +20,15 @@ export default function App() {
   }
 
   return (
-    <div>
-      {page === 'landing'    && <Landing navigate={navigate} />}
-      {page === 'map'        && <WorkplaceMap navigate={navigate} />}
-      {page === 'scenario'   && <Scenario scenario={activeScenario} navigate={navigate} />}
-      {page === 'reflection' && <Reflection data={reflectionData} navigate={navigate} />}
-      {page === 'library'    && <Library navigate={navigate} />}
-    </div>
+    <ThemeProvider>
+      <div>
+        {page === 'landing'    && <Landing navigate={navigate} />}
+        {page === 'map'        && <WorkplaceMap navigate={navigate} />}
+        {page === 'scenario'   && <Scenario scenario={activeScenario} navigate={navigate} />}
+        {page === 'reflection' && <Reflection data={reflectionData} navigate={navigate} />}
+        {page === 'library'    && <Library navigate={navigate} />}
+      </div>
+      <ThemeSelector />
+    </ThemeProvider>
   )
 }

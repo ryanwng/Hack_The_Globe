@@ -1,0 +1,213 @@
+.wrapper {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+/* ── Trigger button ── */
+
+.trigger {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--paper-shadow);
+  padding: 4px;
+  cursor: pointer;
+  background: var(--paper);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.14), 0 0 0 1px var(--line);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.trigger:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.2), 0 0 0 1px var(--line);
+}
+
+.triggerOpen {
+  border-color: var(--ink-faint);
+}
+
+.triggerSwatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* ── Panel ── */
+
+.panel {
+  background: var(--paper);
+  border: 1px dashed var(--paper-shadow);
+  border-radius: 3px;
+  padding: 1.1rem 1.25rem 1.2rem;
+  width: 238px;
+  box-shadow: 0 6px 36px rgba(0, 0, 0, 0.12), 0 0 0 1px var(--line);
+  animation: fadeUp 0.14s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.85rem;
+}
+
+/* ── Theme swatches ── */
+
+.themeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem 0.3rem;
+}
+
+.themeBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.32rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem 0;
+}
+
+.swatch {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--paper-shadow);
+  transition: transform 0.13s, box-shadow 0.13s, border-color 0.13s;
+}
+
+.themeBtn:hover .swatch {
+  transform: scale(1.13);
+  border-color: var(--ink-faint);
+}
+
+.themeBtn.active .swatch {
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink-faint);
+}
+
+.themeName {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  user-select: none;
+}
+
+.themeBtn.active .themeName {
+  color: var(--ink);
+}
+
+/* ── Divider ── */
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  margin: 1rem 0;
+}
+
+/* ── Toggle switches ── */
+
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 30px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.toggleTrack input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggleThumb {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  border: 1.5px solid var(--ink-faint);
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+
+.toggleThumb::after {
+  content: '';
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  top: 1.5px;
+  left: 1.5px;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.toggleTrack input:checked + .toggleThumb {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.toggleTrack input:checked + .toggleThumb::after {
+  transform: translateX(13px);
+  background: var(--paper);
+}
+
+.toggleLabel {
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-light);
+  user-select: none;
+}
+
+/* ── Respect reduce-motion ── */
+
+html.reduce-motion .panel {
+  animation: none;
+}
+
+html.reduce-motion .swatch,
+html.reduce-motion .trigger,
+html.reduce-motion .toggleThumb,
+html.reduce-motion .toggleThumb::after {
+  transition: none;
+}
