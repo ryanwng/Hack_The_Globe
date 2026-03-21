@@ -19,9 +19,7 @@ export default function Landing({ navigate }) {
 
       <main className={styles.hero}>
         <div className={styles.heroInner}>
-          <h1 className={styles.headline}>
-            Practice the<br />conversations<br />that matter.
-          </h1>
+          <TypewriterHeadline />
           <p className={styles.subline}>No scores. No judgment.</p>
           <div className={styles.ctaRow}>
             <TapeButton
@@ -38,10 +36,6 @@ export default function Landing({ navigate }) {
             />
           </div>
         </div>
-
-        <div className={styles.heroAside}>
-          <TypewriterDeco />
-        </div>
       </main>
 
       <div className={styles.bottomRule} />
@@ -52,6 +46,35 @@ export default function Landing({ navigate }) {
         <em>Stories can change the world.</em>
       </footer>
     </div>
+  )
+}
+
+function TypewriterHeadline() {
+  const text = 'Practice the conversations that matter.'
+
+  const [displayed, setDisplayed] = useState('')
+  const indexRef = useRef(0)
+
+  useEffect(() => {
+  let i = 0
+
+  const interval = setInterval(() => {
+    if (i >= text.length) {
+      clearInterval(interval)
+      return
+    }
+
+    setDisplayed(text.slice(0, i + 1))
+    i++
+  }, 35)
+
+  return () => clearInterval(interval)
+}, [])
+
+  return (
+    <h1 className={styles.headline} style={{ whiteSpace: 'pre-line' }}>
+      {displayed}
+    </h1>
   )
 }
 

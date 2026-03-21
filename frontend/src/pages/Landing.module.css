@@ -5,10 +5,10 @@
 }
 
 .topRule, .bottomRule {
-  height: 3px;
-  background: repeating-linear-gradient(90deg, var(--ink) 0, var(--ink) 6px, transparent 6px, transparent 12px);
+  height: 1px;
+  background: var(--line);
   margin: 0 -2rem;
-  opacity: 0.25;
+  opacity: 0.2;
 }
 
 .bottomRule {
@@ -65,24 +65,23 @@
 /* ── Hero ── */
 
 .hero {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 3rem;
   padding: 5rem 0 4rem;
-  align-items: center;
 }
 
 .heroInner {
-  max-width: 480px;
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .headline {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 5.5vw, 4rem);
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
   line-height: 1.12;
   letter-spacing: 0.01em;
   color: var(--ink);
   margin-bottom: 1.2rem;
+  min-height: 3em;
 }
 
 .subline {
@@ -96,7 +95,8 @@
 
 .ctaRow {
   position: relative;
-  height: 160px;
+  height: 200px;
+  margin-top: 2rem;
 }
 
 /* ── Tape buttons ── */
@@ -108,18 +108,19 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  display: inline-block;
-  transition: transform 0.14s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  transition: transform 0.14s, filter 0.14s;
 }
 
 .ctaPrimary img,
 .ctaSecondary img {
   display: block;
   filter: var(--tape-filter);
+  pointer-events: none;
 }
-
-.ctaPrimary img  { width: 255px; }
-.ctaSecondary img { width: 220px; }
 
 .ctaPrimary span,
 .ctaSecondary span {
@@ -134,34 +135,32 @@
   transform: translate(-50%, calc(-50% - 3px));
 }
 
-.ctaPrimary span { font-size: 0.88rem; }
-.ctaSecondary span { font-size: 0.8rem; }
+.ctaPrimary span {
+  font-size: 1rem;
+}
 
-/* Placement — secondary (Browse) top-left, primary (Workplace) bottom-right anchor */
+.ctaSecondary span {
+  font-size: 0.9rem;
+}
+
 .ctaSecondary {
-  top: 0;
-  left: -4px;
   --rot: -6deg;
   transform: rotate(var(--rot));
+  top: -20px;
+  left: 50%;
+  margin-left: -200px;
 }
 
 .ctaPrimary {
-  bottom: 0;
-  left: 130px;
   --rot: 4deg;
   transform: rotate(var(--rot));
+  bottom: 20px;
+  left: 50%;
+  margin-left: -80px;
 }
 
 .tapeHover {
   transform: rotate(var(--rot)) scale(1.04) translateY(-2px);
-}
-
-.heroAside {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  border: 1px dashed var(--paper-shadow);
 }
 
 /* ── Footer ── */
@@ -183,7 +182,7 @@
 @media (max-width: 640px) {
   .hero {
     grid-template-columns: 1fr;
-    padding: 3.5rem 0 3rem;
+    padding: 6rem 0 5rem;
   }
   .heroAside {
     display: none;

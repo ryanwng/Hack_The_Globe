@@ -52,13 +52,11 @@ export default function Reflection({ data, navigate }) {
         {/* What happened */}
         <div className={styles.block}>
           <span className={styles.blockLabel}>What you tried</span>
+          {history.length === 0 && <p className={styles.historyQ}>Nothing recorded yet.</p>}
           {history.map((h, i) => (
             <div key={i} className={styles.historyItem}>
-              <p className={styles.historyQ}>{h.turn?.character_says}</p>
-              <p className={styles.historyA}>
-                <em>You:</em> {h.chosen?.free ? h.freeText || h.chosen?.text : h.chosen?.text}
-              </p>
-              <p className={styles.historyOutcome}>{h.chosen?.outcome}</p>
+              <p className={styles.historyQ}>{h.aiMessage}</p>
+              <p className={styles.historyA}><em>You:</em> {h.userMessage}</p>
             </div>
           ))}
         </div>
@@ -66,19 +64,54 @@ export default function Reflection({ data, navigate }) {
         <div className={styles.divider} />
 
         {(isLoadingFeedback || feedback || feedbackError) && (
-          <div className={styles.block}>
-            <span className={styles.blockLabel}>AI feedback</span>
-            {isLoadingFeedback && <p className={styles.blockText}>Generating feedback...</p>}
-            {feedbackError && <p className={styles.blockText}>{feedbackError}</p>}
+          <>
+            {isLoadingFeedback && (
+              <div className={styles.block}>
+                <span className={styles.blockLabel}>Feedback</span>
+                <p className={styles.blockText}>Generating feedback…</p>
+              </div>
+            )}
+            {feedbackError && (
+              <div className={styles.block}>
+                <span className={styles.blockLabel}>Feedback</span>
+                <p className={styles.blockText}>{feedbackError}</p>
+              </div>
+            )}
             {feedback && (
               <>
-                <p className={styles.blockText}><strong>Strengths:</strong> {feedback.strengths.join(', ') || 'N/A'}</p>
-                <p className={styles.blockText}><strong>Improvements:</strong> {feedback.improvements.join(', ') || 'N/A'}</p>
-                <p className={styles.blockText}><strong>Better phrases:</strong> {feedback.exampleBetterPhrases.join(', ') || 'N/A'}</p>
-                <p className={styles.blockText}><strong>Next focus:</strong> {feedback.nextPracticeFocus}</p>
+                {feedback.strengths?.length > 0 && (
+                  <div className={styles.block}>
+                    <span className={styles.blockLabel}>What went well</span>
+                    <ul className={styles.promptList}>
+                      {feedback.strengths.map((s, i) => <li key={i} className={styles.promptItem}>{s}</li>)}
+                    </ul>
+                  </div>
+                )}
+                {feedback.improvements?.length > 0 && (
+                  <div className={styles.block}>
+                    <span className={styles.blockLabel}>Things to explore next time</span>
+                    <ul className={styles.promptList}>
+                      {feedback.improvements.map((s, i) => <li key={i} className={styles.promptItem}>{s}</li>)}
+                    </ul>
+                  </div>
+                )}
+                {feedback.exampleBetterPhrases?.length > 0 && (
+                  <div className={styles.block}>
+                    <span className={styles.blockLabel}>Phrases to try</span>
+                    <ul className={styles.promptList}>
+                      {feedback.exampleBetterPhrases.map((s, i) => <li key={i} className={styles.promptItem}>"{s}"</li>)}
+                    </ul>
+                  </div>
+                )}
+                {feedback.nextPracticeFocus && (
+                  <div className={styles.block}>
+                    <span className={styles.blockLabel}>Next practice focus</span>
+                    <p className={styles.blockText}>{feedback.nextPracticeFocus}</p>
+                  </div>
+                )}
               </>
             )}
-          </div>
+          </>
         )}
 
         <div className={styles.divider} />
