@@ -323,17 +323,17 @@
   gap: 0.25rem;
 }
 
-<<<<<<< HEAD .speakerHeader {
+.speakerHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-=======.userBubble {
+.userBubble {
   align-items: flex-end;
 }
 
->>>>>>>142b8270588abdf05001ff4f4f584ff742f6acaa .speakerName {
+.speakerName {
   font-family: var(--font-display);
   font-size: 0.65rem;
   letter-spacing: 0.12em;
@@ -506,7 +506,7 @@
   align-items: center;
 }
 
-<<<<<<< HEAD .freeTextarea::placeholder {
+.freeTextarea::placeholder {
   color: var(--ink-faint);
 }
 
@@ -556,11 +556,8 @@
   }
 }
 
-.freeSubmit {
-  align-self: flex-start;
-
-  =======.sendBtn {
-    >>>>>>>142b8270588abdf05001ff4f4f584ff742f6acaa font-family: var(--font-mono);
+.sendBtn {
+  font-family: var(--font-mono);
     font-size: 0.82rem;
     letter-spacing: 0.04em;
     background: var(--ink);
@@ -601,87 +598,8 @@
     gap: 0.8rem;
   }
 
-  <<<<<<< HEAD .revealBtn {
-    align-self: flex-end;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    letter-spacing: 0.06em;
-    background: none;
-    border: 1px solid var(--ink);
-    color: var(--ink);
-    padding: 0.5rem 1.1rem;
-    cursor: pointer;
-    transition: background 0.12s, color 0.12s;
-  }
-
-  .revealBtn:hover {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  /* Outcome */
-  .hintCard {
-    background: var(--paper-dark);
-    border: 1px solid var(--line);
-    padding: 1.2rem 1.4rem;
-    margin-top: 1rem;
-  }
-
-  .hintHeader {
-    margin-bottom: 0.8rem;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 0.6rem;
-  }
-
-  .hintHeaderLabel {
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-
-  .hintPerspective {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--ink-light);
-    margin-bottom: 1rem;
-  }
-
-  .hintActionBox {
-    background: var(--paper);
-    border-left: 3px solid var(--ink);
-    padding: 0.8rem 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .hintAction {
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    line-height: 1.5;
-    color: var(--ink);
-  }
-
-  .hintActionLabel {
-    font-family: var(--font-display);
-    text-transform: uppercase;
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    margin-right: 0.4rem;
-  }
-
-  .hintWhy {
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    line-height: 1.6;
-    color: var(--ink-faint);
-    font-style: italic;
-  }
-
-  .outcomeSection {
-    =======.hintPanelHeader {
-      >>>>>>>142b8270588abdf05001ff4f4f584ff742f6acaa display: flex;
+  .hintPanelHeader {
+    display: flex;
       align-items: center;
       justify-content: space-between;
     }
