@@ -72,7 +72,6 @@ export default function Reflection({ data, navigate }) {
             {feedbackError && <p className={styles.blockText}>{feedbackError}</p>}
             {feedback && (
               <>
-                <p className={styles.blockText}><strong>Overall score:</strong> {feedback.overallScore}</p>
                 <p className={styles.blockText}><strong>Strengths:</strong> {feedback.strengths.join(', ') || 'N/A'}</p>
                 <p className={styles.blockText}><strong>Improvements:</strong> {feedback.improvements.join(', ') || 'N/A'}</p>
                 <p className={styles.blockText}><strong>Better phrases:</strong> {feedback.exampleBetterPhrases.join(', ') || 'N/A'}</p>

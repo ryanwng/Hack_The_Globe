@@ -77,24 +77,18 @@ def _parse_hint(raw_hint: str) -> HintPayload:
 
 def _parse_feedback(raw_feedback: str) -> FeedbackResponse:
     parts = [p.strip() for p in raw_feedback.split("||")]
-    if len(parts) < 5:
+    if len(parts) < 4:
         return FeedbackResponse(
             strengths=["Engaged in the conversation."],
             improvements=["Add clearer structure to each response."],
             exampleBetterPhrases=["Could you clarify what success looks like in this role?"],
-            overallScore=70,
             nextPracticeFocus="Practice concise answers with one example.",
         )
-    try:
-        score = int(parts[3])
-    except ValueError:
-        score = 70
     return FeedbackResponse(
         strengths=[s.strip() for s in parts[0].split(",") if s.strip()],
         improvements=[s.strip() for s in parts[1].split(",") if s.strip()],
         exampleBetterPhrases=[s.strip() for s in parts[2].split(",") if s.strip()],
-        overallScore=max(0, min(100, score)),
-        nextPracticeFocus=parts[4],
+        nextPracticeFocus=parts[3],
     )
 
 
@@ -102,14 +96,24 @@ def _parse_feedback(raw_feedback: str) -> FeedbackResponse:
 def scenarios() -> list[Scenario]:
     return [
         Scenario(
-            scenarioId="job_interview",
-            scenarioTitle="Job Interview",
-            description="Practice answering interview questions clearly and confidently.",
+            scenarioId="technical_debt_presentation",
+            scenarioTitle="Technical Scope Negotiation",
+            description="Negotiate a re-prioritization of technical debt with an engineering lead who is focused on shipping new features for a Q3 release.",
         ),
         Scenario(
-            scenarioId="team_conflict",
-            scenarioTitle="Team Conflict",
-            description="Practice navigating disagreement with respectful communication.",
+            scenarioId="low_performing_peer",
+            scenarioTitle="Providing Peer Feedback",
+            description="Discuss a consistent pattern of missed deadlines with a peer whose work quality is impacting the wider team's project delivery timeline.",
+        ),
+        Scenario(
+            scenarioId="senior_leadership_pitch",
+            scenarioTitle="Project Resource Advocacy",
+            description="A 10% budget reduction has been mandated. Stakeholders are requesting a justification for maintaining existing headcount on a cross-functional initiative.",
+        ),
+        Scenario(
+            scenarioId="cross_functional_alignment",
+            scenarioTitle="Inter-Departmental Conflict",
+            description="A design stakeholder is requesting changes that extend beyond the current sprint scope. You need to align expectations regarding incremental delivery.",
         ),
     ]
 
@@ -121,6 +125,7 @@ def create_session(payload: SessionCreateRequest) -> SessionCreateResponse:
         scenario_title=payload.scenarioTitle,
         user_goal=payload.userGoal,
         difficulty=payload.difficulty or "medium",
+        user_context=payload.userContext,
     )
     raw_opening = get_gemini().generate_text(build_opening_prompt(state))
     message, options = _split_message_and_options(raw_opening)

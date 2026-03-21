@@ -19,6 +19,7 @@ class SessionCreateRequest(BaseModel):
     scenarioId: str = Field(..., min_length=1)
     scenarioTitle: str = Field(..., min_length=1)
     userGoal: str = Field(..., min_length=1)
+    userContext: Optional[str] = None
     difficulty: Optional[str] = "medium"
 
 
@@ -57,7 +58,6 @@ class FeedbackResponse(BaseModel):
     strengths: List[str]
     improvements: List[str]
     exampleBetterPhrases: List[str]
-    overallScore: int
     nextPracticeFocus: str
 
 

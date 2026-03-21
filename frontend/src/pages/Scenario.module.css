@@ -117,8 +117,6 @@
   font-style: italic;
 }
 
-.goalSection {}
-
 .goalHeading {
   font-family: var(--font-display);
   font-size: 1.2rem;
@@ -431,7 +429,67 @@
   transition: background 0.12s;
 }
 
-.continueBtn:hover {
+.startBtn:hover:not(:disabled) {
   background: var(--accent);
   border-color: var(--accent);
+}
+
+.startBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.inputLabel {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.goalInput, .contextInput {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.85rem 1.1rem;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.goalInput {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.goalInput:focus, .contextInput:focus {
+  border-color: var(--ink);
+}
+
+.goalInput::placeholder, .contextInput::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.startBtn {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, opacity 0.12s;
+  width: 100%;
 }

@@ -4,12 +4,7 @@ import PageShell from '../components/PageShell'
 import { completeSession, createSession, createTurn, getHint } from '../api/client'
 import { mapFrontendScenarioToApi } from '../lib/scenarioApiMapping'
 
-const GOAL_OPTIONS = [
-  'I want to come across as competent and professional.',
-  'I just want to get through this without freezing up.',
-  'I want to seem friendly and easy to work with.',
-  'I want to be honest about my experience, even if it is limited.',
-]
+
 
 export default function Scenario({ scenario, navigate }) {
   const [phase, setPhase] = useState('goal') // goal | chat | paused
@@ -25,6 +20,8 @@ export default function Scenario({ scenario, navigate }) {
   const [apiScenario, setApiScenario] = useState(null)
   const [responseOptions, setResponseOptions] = useState([])
   const [showFreeText, setShowFreeText] = useState(false)
+  const [customGoal, setCustomGoal] = useState('')
+  const [contextInput, setContextInput] = useState('')
 
   const activeScenario = useMemo(() => scenario || {}, [scenario])
   const scenarioLabel = useMemo(() => activeScenario.title || 'Scenario', [activeScenario.title])
@@ -33,19 +30,20 @@ export default function Scenario({ scenario, navigate }) {
     setApiScenario(mapFrontendScenarioToApi(activeScenario))
   }, [activeScenario])
 
-  const handleGoal = async (goal) => {
-    if (!apiScenario) return
-    setSelectedGoal(goal)
+  const handleStart = async () => {
+    if (!apiScenario || !customGoal.trim()) return
     setError('')
     setIsLoading(true)
     try {
       const payload = await createSession({
         scenarioId: apiScenario.scenarioId,
         scenarioTitle: apiScenario.scenarioTitle,
-        userGoal: goal,
+        userGoal: customGoal.trim(),
+        userContext: contextInput.trim() || undefined,
         difficulty: activeScenario.difficulty || 'medium',
       })
       setSessionId(payload.sessionId)
+      setSelectedGoal(customGoal.trim())
       setMessages([{ role: 'assistant', content: payload.aiOpeningMessage }])
       setResponseOptions(payload.responseOptions || [])
       setShowFreeText(false)
@@ -140,25 +138,40 @@ export default function Scenario({ scenario, navigate }) {
         {phase === 'goal' && (
           <div className={styles.goalPhase}>
             <div className={styles.settingCard}>
-              <span className={styles.settingLabel}>Setting</span>
-              <p className={styles.settingText}>Practice a live conversation with AI based on this workplace scenario.</p>
+              <span className={styles.settingLabel}>Scenario</span>
+              <p className={styles.settingText}>{activeScenario.description}</p>
             </div>
             <div className={styles.goalSection}>
               <h2 className={styles.goalHeading}>What is your goal for this conversation?</h2>
-              <p className={styles.goalNote}>There is no right answer. You decide what success looks like.</p>
-              <div className={styles.goalOptions}>
-                {GOAL_OPTIONS.map((g, i) => (
-                  <button
-                    key={i}
-                    className={`${styles.goalOption} ${selectedGoal === g ? styles.goalSelected : ''}`}
-                    onClick={() => !isLoading && handleGoal(g)}
-                    disabled={isLoading}
-                  >
-                    {g}
-                  </button>
-                ))}
+              
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel}>Your specific goal</label>
+                <textarea
+                  className={styles.goalInput}
+                  placeholder="e.g. I want to sound confident while admitting the mistake."
+                  value={customGoal}
+                  onChange={(e) => setCustomGoal(e.target.value)}
+                  rows={3}
+                />
               </div>
-              {isLoading && <p className={styles.goalNote}>Starting session...</p>}
+
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel}>Setting / Context (Optional)</label>
+                <input
+                  className={styles.contextInput}
+                  placeholder="e.g. Technical meeting with engineering leads"
+                  value={contextInput}
+                  onChange={(e) => setContextInput(e.target.value)}
+                />
+              </div>
+
+              <button 
+                className={styles.startBtn}
+                onClick={handleStart}
+                disabled={isLoading || !customGoal.trim()}
+              >
+                {isLoading ? 'Setting the stage...' : 'Start Scenario →'}
+              </button>
             </div>
           </div>
         )}
