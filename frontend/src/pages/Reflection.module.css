@@ -1,0 +1,210 @@
+.page {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 2.5rem 0 4rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.label {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: 0.8rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: normal;
+  color: var(--ink);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.4rem;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  margin: 2rem 0;
+}
+
+.block {
+  margin-bottom: 2rem;
+}
+
+.blockLabel {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.8rem;
+}
+
+.blockText {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ink);
+  border-left: 2px solid var(--ink-faint);
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+/* History */
+.historyItem {
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.historyItem:last-child {
+  border-bottom: none;
+}
+
+.historyQ {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  margin-bottom: 0.4rem;
+  line-height: 1.6;
+}
+
+.historyA {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+  line-height: 1.6;
+}
+
+.historyOutcome {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-light);
+  line-height: 1.6;
+  font-style: italic;
+  border-left: 2px solid var(--paper-shadow);
+  padding-left: 0.8rem;
+  margin-top: 0.3rem;
+}
+
+/* Prompts */
+.promptList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.promptItem {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--ink-light);
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.promptItem::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--ink-faint);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.replayBtn {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 0.6rem 1.3rem;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.replayBtn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.mapBtn, .libraryBtn {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  background: none;
+  border: 1px solid var(--ink-faint);
+  color: var(--ink-light);
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.mapBtn:hover, .libraryBtn:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Save card */
+.saveCard {
+  border: 1px dashed var(--paper-shadow);
+  padding: 1.4rem 1.6rem;
+  background: var(--paper-dark);
+}
+
+.saveLabel {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.saveText {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--ink-light);
+  margin-bottom: 1rem;
+}
+
+.saveBtn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  background: none;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.saveBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}

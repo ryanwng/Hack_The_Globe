@@ -1,0 +1,297 @@
+.page {
+  padding: 2rem 0;
+}
+
+.titleBar {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--ink);
+  font-weight: normal;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: auto 300px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Viewport — fixed size, no scrollbars, clips the map */
+.viewport {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--paper-dark);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 42px 42px;
+  cursor: default;
+  outline: none;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.viewport:focus {
+  border-color: var(--ink-faint);
+}
+
+.mapGrid {
+  will-change: transform;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Room floors */
+.roomFloor {
+  position: absolute;
+  background: var(--paper);
+  border: none;
+}
+
+.hallwayFloor {
+  position: absolute;
+  background: var(--paper);
+  opacity: 0.5;
+}
+
+/* Wall blocks */
+.wall {
+  position: absolute;
+  background: var(--ink);
+  opacity: 0.78;
+  border-radius: 1px;
+}
+
+/* Door markers */
+.door {
+  position: absolute;
+  background: var(--paper-shadow);
+  border-radius: 1px;
+  opacity: 0.6;
+}
+
+/* Room labels */
+.roomLabel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  pointer-events: none;
+  z-index: 5;
+  transform: translateX(-50%);
+}
+
+.roomIcon {
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  line-height: 1;
+}
+
+.roomName {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* Furniture */
+.furniture {
+  position: absolute;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Character */
+.character {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  transition: none; /* movement handled by JS at 60fps */
+}
+
+/* Walking animation — gentle bob */
+.charWalking {
+  animation: charBob 0.28s ease-in-out infinite;
+}
+
+@keyframes charBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+
+/* Panel */
+.panel {
+  position: sticky;
+  top: 1rem;
+}
+
+.panelHint {
+  border: 1px dashed var(--paper-shadow);
+  padding: 1.4rem;
+}
+
+.hintText {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.hintText + .hintText {
+  margin-top: 0.3rem;
+}
+
+.legend {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendIcon {
+  font-size: 0.75rem;
+  width: 1.2rem;
+  text-align: center;
+  color: var(--ink-light);
+}
+
+.legendLabel {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--ink-light);
+  letter-spacing: 0.04em;
+}
+
+/* Scenario panel */
+.scenarioPanel {
+  border: 1px solid var(--line);
+}
+
+.panelHeader {
+  padding: 1rem 1.2rem 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.panelIcon {
+  font-size: 1rem;
+  color: var(--ink-light);
+}
+
+.panelTitle {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--ink);
+  letter-spacing: 0.03em;
+}
+
+.panelDivider {
+  height: 1px;
+  background: var(--line);
+  margin: 0 1.2rem;
+}
+
+/* Scenario cards */
+.card {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.cardTag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.cardDiff {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.08rem 0.35rem;
+  border: 1px solid;
+}
+
+.diff_gentle { color: var(--accent); border-color: var(--accent); }
+.diff_moderate { color: var(--accent-warm); border-color: var(--accent-warm); }
+.diff_challenging { color: var(--ink); border-color: var(--ink); }
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: normal;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+.cardDur {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  margin-bottom: 0.75rem;
+}
+
+.startBtn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  background: none;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.startBtn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    position: static;
+  }
+}

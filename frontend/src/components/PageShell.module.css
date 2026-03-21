@@ -1,0 +1,76 @@
+.shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.topRule {
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0, var(--ink) 6px, transparent 6px, transparent 12px);
+  margin: 0 -2rem;
+  opacity: 0.22;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 0;
+}
+
+.logo {
+  background: none;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.navLink {
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+  transition: color 0.12s;
+}
+
+.navLink:hover {
+  color: var(--ink);
+}
+
+.sep {
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+}
+
+.headerRule, .footerRule {
+  height: 1px;
+  background: var(--line);
+}
+
+.main {
+  min-height: 60vh;
+}
+
+.footer {
+  padding: 1.5rem 0 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}

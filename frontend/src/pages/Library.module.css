@@ -1,0 +1,195 @@
+.page {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2.5rem 0 4rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: normal;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  margin: 2.2rem 0;
+}
+
+.section {
+  margin-bottom: 0;
+}
+
+.sectionLabel {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1.2rem;
+}
+
+.empty {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* Practiced */
+.practicedList {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 1px solid var(--line);
+}
+
+.practicedCard {
+  padding: 1.2rem 1.4rem;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.practicedCard:last-child {
+  border-bottom: none;
+}
+
+.practicedTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.practicedLocation {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.practicedDate {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+
+.practicedTitle {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.practicedGoal {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+}
+
+.practicedMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.timesLabel {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.replaySmall {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  background: none;
+  border: 1px solid var(--ink-faint);
+  color: var(--ink-light);
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.replaySmall:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Available */
+.availableGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0;
+  border: 1px solid var(--line);
+}
+
+.availableCard {
+  padding: 1.1rem 1.2rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.availableTag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.availableTitle {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: normal;
+  color: var(--ink-light);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.availableLocation {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+/* Note */
+.note {
+  padding: 0.8rem 0;
+}
+
+.note p {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  line-height: 1.7;
+  border-left: 2px solid var(--paper-shadow);
+  padding-left: 0.8rem;
+}

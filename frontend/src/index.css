@@ -1,0 +1,49 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --paper: #f4f1eb;
+  --paper-dark: #e8e3d8;
+  --paper-shadow: #d6cfbf;
+  --ink: #1a1a2e;
+  --ink-light: #3d3d5c;
+  --ink-faint: #8a8a9a;
+  --accent: #2c4a6e;
+  --accent-warm: #5c3d2e;
+  --line: rgba(26, 26, 46, 0.12);
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+  --font-display: 'Special Elite', 'Courier New', monospace;
+  --font-serif: 'IM Fell English', Georgia, serif;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  line-height: 1.7;
+  min-height: 100vh;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--paper-dark); }
+::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 3px; }
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
