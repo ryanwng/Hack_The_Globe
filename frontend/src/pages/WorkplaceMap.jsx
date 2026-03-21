@@ -31,7 +31,7 @@ const ROOMS = [
     label: 'Interview Room',
     icon: '▣',
     x: 638, y: 42, w: 280, h: 196,
-    doorX: 778, doorY: 196, doorW: 42, doorH: 10,
+    doorX: 750, doorY: 238, doorW: 60, doorH: 10,
     scenarios: [
       { id: 'first-interview', title: 'First job interview', difficulty: 'moderate', duration: '10–15 min', tag: 'High stakes' },
       { id: 'follow-up', title: 'Following up after an interview', difficulty: 'gentle', duration: '5–8 min', tag: 'Low pressure' },
@@ -76,7 +76,7 @@ function buildWalls() {
   walls.push({ x: MAP_W - T, y: 0, w: T, h: MAP_H })    // right
 
   for (const room of ROOMS) {
-    const { x, y, w, h, doorX, doorY, doorW } = room
+    const { x, y, w, h, doorX, doorY, doorW, doorH } = room
 
     // Top wall of room (if door is not on top)
     if (doorY !== y) {
@@ -88,12 +88,22 @@ function buildWalls() {
     }
 
     // Bottom wall
-    if (doorY !== y + h) {
-      walls.push({ x, y: y + h - T, w, h: T })
-    } else {
-      if (doorX > x) walls.push({ x, y: y + h - T, w: doorX - x, h: T })
-      if (doorX + doorW < x + w) walls.push({ x: doorX + doorW, y: y + h - T, w: (x + w) - (doorX + doorW), h: T })
-    }
+    // Always carve bottom wall with a gap for the door
+    const bottomY = y + h - T
+    
+    walls.push({
+      x,
+      y: bottomY,
+      w: doorX - x,
+      h: T,
+    })
+
+    walls.push({
+      x: doorX + doorW,
+      y: bottomY,
+      w: (x + w) - (doorX + doorW),
+      h: T,
+    })
 
     // Left wall
     if (doorX !== x) {
@@ -266,16 +276,36 @@ export default function WorkplaceMap({ navigate }) {
 
   // Key handlers
   useEffect(() => {
-    const down = (e) => {
-      if (DIR[e.key]) { e.preventDefault(); keysDown.current.add(e.key) }
+  const handler = (e) => {
+    // Movement keys
+    if (DIR[e.key]) {
+      e.preventDefault()
+      keysDown.current.add(e.key)
     }
-    const up = (e) => {
-      keysDown.current.delete(e.key)
+
+    // E key interaction
+    if (e.key === 'e' || e.key === 'E') {
+      if (activeRoom && isNearDoor(posRef.current, activeRoom)) {
+        const firstScenario = activeRoom.scenarios?.[0]
+        if (firstScenario) {
+          navigate('scenario', firstScenario)
+        }
+      }
     }
-    window.addEventListener('keydown', down)
-    window.addEventListener('keyup', up)
-    return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up) }
-  }, [])
+  }
+
+  const up = (e) => {
+    keysDown.current.delete(e.key)
+  }
+
+  window.addEventListener('keydown', handler)
+  window.addEventListener('keyup', up)
+
+  return () => {
+    window.removeEventListener('keydown', handler)
+    window.removeEventListener('keyup', up)
+  }
+}, [activeRoom, navigate])
 
   // Auto-focus
   useEffect(() => { mapRef.current?.focus() }, [])
@@ -350,7 +380,12 @@ export default function WorkplaceMap({ navigate }) {
                 <div
                   key={`door-${room.id}`}
                   className={styles.door}
-                  style={{ left: room.doorX, top: room.doorY - 2, width: room.doorW, height: 8 }}
+                  style={{
+                    left: room.doorX,
+                    top: room.doorY,     // ❗ no offset
+                    width: room.doorW,
+                    height: room.doorH,           // match wall thickness (T = 6)
+                  }}
                 />
               ))}
 
@@ -522,5 +557,29 @@ function CharacterSVG({ facing }) {
       <rect x="6" y="22" width="3" height="4.5" rx="1" fill="var(--ink)" />
       <rect x="11" y="22" width="3" height="4.5" rx="1" fill="var(--ink)" />
     </svg>
+  )
+}
+
+function isNearDoor(pos, room) {
+  if (!room) return false
+
+  const cx = pos.x + CHAR_W / 2
+  const cy = pos.y + CHAR_H / 2
+
+  const door = {
+    x: room.doorX,
+    y: room.doorY,
+    w: room.doorW,
+    h: room.doorH,
+  }
+
+  // small interaction buffer
+  const buffer = 20
+
+  return (
+    cx > door.x - buffer &&
+    cx < door.x + door.w + buffer &&
+    cy > door.y - buffer &&
+    cy < door.y + door.h + buffer
   )
 }
